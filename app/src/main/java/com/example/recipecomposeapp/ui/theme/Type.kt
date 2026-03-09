@@ -31,26 +31,31 @@ val recipesAppTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = montserratAlternatesFontFamily,
         fontSize = 20.sp,
+        lineHeight = 24.sp,
         fontWeight = FontWeight.SemiBold,
     ),
     titleMedium = TextStyle(
         fontFamily = montserratAlternatesFontFamily,
         fontSize = 16.sp,
+        lineHeight = 19.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = montserratFontFamily,
         fontWeight = FontWeight.Medium,
+        lineHeight = 16.sp,
         fontSize = 14.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = montserratFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
+        lineHeight = 16.sp,
     ),
     labelLarge = TextStyle(
         fontFamily = montserratFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
+        lineHeight = 19.5.sp,
     )
 )
 

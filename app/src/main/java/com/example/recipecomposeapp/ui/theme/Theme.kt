@@ -15,10 +15,10 @@ private val DarkColorScheme = darkColorScheme(
     surface = SurfaceColorDark,
     outline = DividerColorDark,
     onSurface = TextPrimaryColorDark,
-    onSecondary = TextSecondaryColorDark,
+    onSurfaceVariant = TextSecondaryColorDark,
     surfaceVariant = SurfaceVariantColorDark,
     tertiaryContainer = SliderTrackColorDark,
-
+    onError = TextPrimaryColor,
     )
 
 private val LightColorScheme = lightColorScheme(
@@ -30,9 +30,10 @@ private val LightColorScheme = lightColorScheme(
     surface = SurfaceColor,
     outline = DividerColor,
     onSurface = TextPrimaryColor,
-    onSecondary = TextSecondaryColor,
+    onSurfaceVariant = TextSecondaryColor,
     surfaceVariant = SurfaceVariantColor,
     tertiaryContainer = SliderTrackColor,
+    onError = TextPrimaryColor
 )
 
 @Composable

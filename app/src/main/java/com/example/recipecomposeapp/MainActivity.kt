@@ -19,14 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            RecipeComposeAppTheme {
-                Scaffold { paddingValues ->
-                    Text(
-                        text = "Recipe App",
-                        modifier = Modifier.padding(paddingValues)
-                    )
-                }
-            }
+            RecipeApp()
         }
     }
 }

@@ -7,6 +7,7 @@ object Dimens {
     val paddingMedium = 16.dp
     val paddingBig = 32.dp
     val paddingHeaderText = 10.dp
+    val paddingIcon = 10.dp
     val shapeRadiusButton = 8.dp
     val shapeRadiusCard = 8.dp
     val heightButton = 36.dp

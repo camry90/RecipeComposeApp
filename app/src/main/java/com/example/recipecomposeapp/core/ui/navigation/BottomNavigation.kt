@@ -2,6 +2,7 @@ package com.example.recipecomposeapp.core.ui.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,7 +26,11 @@ fun BottomNavigation(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
-        modifier = Modifier.padding(horizontal = Dimens.paddingSmall, vertical = Dimens.paddingSmall),
+        modifier = Modifier
+            .navigationBarsPadding()
+            .padding(Dimens.paddingSmall)
+            .padding(horizontal = Dimens.paddingSmall, vertical = Dimens.paddingSmall)
+
     ) {
         Button(
             modifier = Modifier.weight(1f),
@@ -36,7 +41,7 @@ fun BottomNavigation(
             onClick = onCategoriesClick,
         ) {
             Text(
-                text = "КАТЕГОРИИ",
+                text = "категории".uppercase(),
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -54,7 +59,7 @@ fun BottomNavigation(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "ИЗБРАННОЕ",
+                    text = "избранное".uppercase(),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Icon(

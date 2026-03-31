@@ -1,4 +1,4 @@
-package com.example.recipecomposeapp.ui.categories
+package com.example.recipecomposeapp.ui.recipes
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -11,23 +11,23 @@ import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
-fun CategoriesScreen(
+fun RecipesScreen(
     modifier: Modifier = Modifier,
 ) {
     Column() {
         ScreenHeader(
-            imagePainter = painterResource(R.drawable.categories_header),
-            contentDescription = "Categories",
-            title = "категории"
+            imagePainter = painterResource(R.drawable.checker),
+            contentDescription = "Recipes",
+            title = "рецепты",
         )
-        Text("Спиок категорий: ")
+        Text("Скоро здесь будет список рецептов")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CategoriesScreenPreview() {
-    RecipeComposeAppTheme() {
-        CategoriesScreen()
+fun RecipesScreenPreview() {
+    RecipeComposeAppTheme {
+        RecipesScreen()
     }
 }

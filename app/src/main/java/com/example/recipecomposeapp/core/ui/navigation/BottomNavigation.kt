@@ -29,8 +29,6 @@ fun BottomNavigation(
         modifier = Modifier
             .navigationBarsPadding()
             .padding(Dimens.paddingSmall)
-            .padding(horizontal = Dimens.paddingSmall, vertical = Dimens.paddingSmall)
-
     ) {
         Button(
             modifier = Modifier.weight(1f),

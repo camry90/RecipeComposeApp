@@ -1,11 +1,11 @@
-package com.example.recipecomposeapp.ui.components
+package com.example.recipecomposeapp.core.ui
 
-import android.content.ClipDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,7 +24,9 @@ import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 @Composable
 fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: String) {
     Box(
-        modifier = Modifier.height(Dimens.heightScreenHeader)
+        modifier = Modifier
+            .height(Dimens.heightScreenHeader)
+            .statusBarsPadding()
     ) {
         Image(
             painter = imagePainter ,
@@ -42,7 +44,7 @@ fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: Strin
 
         ) {
             Text(
-                text = title,
+                text = title.uppercase(),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(Dimens.paddingHeaderText)
@@ -58,7 +60,7 @@ fun ScreenHeaderPreview() {
         ScreenHeader(
             imagePainter = painterResource(R.drawable.categories_header),
             contentDescription = "Categories",
-            title = "категории".uppercase()
+            title = "категории"
         )
     }
 }

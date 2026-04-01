@@ -26,7 +26,6 @@ fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: Strin
     Box(
         modifier = Modifier
             .height(Dimens.heightScreenHeader)
-            .statusBarsPadding()
     ) {
         Image(
             painter = imagePainter ,

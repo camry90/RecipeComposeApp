@@ -14,7 +14,7 @@ import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
 ) {
-    Column() {
+    Column(modifier = modifier) {
         ScreenHeader(
             imagePainter = painterResource(R.drawable.categories_header),
             contentDescription = "Categories",

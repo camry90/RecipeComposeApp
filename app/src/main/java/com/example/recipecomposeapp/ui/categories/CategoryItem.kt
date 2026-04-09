@@ -43,7 +43,7 @@ fun CategoryItem(
         )
         Text(
             text = category.title.uppercase(),
-            style = MaterialTheme.typography.displayLarge,
+            style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(Dimens.paddingSmall)
         )

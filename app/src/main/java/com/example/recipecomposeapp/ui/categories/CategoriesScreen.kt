@@ -22,7 +22,7 @@ import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
-    onCategoryClick: (Int) -> Unit
+    onCategoryClick: (Int, String) -> Unit
 ) {
     val category = getCategories()
     Column(modifier = modifier) {
@@ -41,7 +41,7 @@ fun CategoriesScreen(
                 CategoryItem(
                     category = item.toUiModel(),
                     onClick = {
-                        onCategoryClick(item.id)
+                        onCategoryClick(item.id, item.title)
                     }
                 )
             }
@@ -53,8 +53,5 @@ fun CategoriesScreen(
 @Composable
 fun CategoriesScreenPreview() {
     RecipeComposeAppTheme() {
-        CategoriesScreen(
-            onCategoryClick = {}
-        )
     }
 }

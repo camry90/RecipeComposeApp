@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +32,7 @@ fun RecipesScreen(
     modifier: Modifier = Modifier,
     categoryId: Int?,
     categoryTitle: String,
+    onRecipeClick: (Int) -> Unit,
 ) {
     var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
@@ -52,20 +54,24 @@ fun RecipesScreen(
             contentDescription = "Recipes",
             title = "рецепты",
         )
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(Dimens.paddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
-        ) {
-            items(recipes, key = { it.id }) { recipe ->
-                RecipeItem(
-                    recipe = recipe,
-                    onRecipeClick = { },
-                    modifier = Modifier.padding(
-                        horizontal = Dimens.paddingMedium,
-                        vertical = Dimens.paddingSmall
-                    ),
-                )
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(Dimens.paddingMedium),
+                verticalArrangement = Arrangement.spacedBy(Dimens.paddingSmall),
+            ) {
+                items(recipes, key = { it.id }) { recipe ->
+                    RecipeItem(
+                        recipe = recipe,
+                        onRecipeClick = onRecipeClick,
+                        modifier = Modifier.padding(
+                            horizontal = Dimens.paddingMedium,
+                            vertical = Dimens.paddingSmall
+                        ),
+                    )
+                }
             }
         }
     }

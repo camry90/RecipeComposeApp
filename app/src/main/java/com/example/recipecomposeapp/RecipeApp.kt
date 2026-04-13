@@ -50,6 +50,7 @@ fun RecipeApp() {
                     RecipesScreen(
                         categoryId = selectedCategoryId ?: error("Category ID is required"),
                         categoryTitle = selectedCategoryTitle,
+                        onRecipeClick = { },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

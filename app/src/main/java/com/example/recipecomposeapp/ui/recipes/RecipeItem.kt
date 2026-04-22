@@ -26,14 +26,14 @@ fun RecipeItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.padding(Dimens.paddingMedium),
+        modifier = modifier.padding(Dimens.paddingMedium),
         onClick = { onRecipeClick(recipe.id) },
         shape = RoundedCornerShape(Dimens.shapeRadiusCard),
         elevation = CardDefaults.cardElevation(Dimens.elevationCard),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth()
         ) {
             AsyncImage(
                 model = recipe.imageUrl,
@@ -45,7 +45,7 @@ fun RecipeItem(
             )
             Text(
                 text = recipe.title,
-                modifier = Modifier.padding(Dimens.paddingSmall),
+                modifier = modifier.padding(Dimens.paddingSmall),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
             )

@@ -9,6 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.recipecomposeapp.core.ui.navigation.BottomNavigation
 import com.example.recipecomposeapp.ui.categories.CategoriesScreen
 import com.example.recipecomposeapp.ui.favorites.FavoritesScreen
@@ -18,41 +23,40 @@ import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 @Composable
 fun RecipeApp() {
     RecipeComposeAppTheme {
-        var currentScreen by remember { mutableStateOf(ScreenId.CATEGORIES) }
-        var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
-        var selectedCategoryTitle by remember { mutableStateOf("") }
+        val navController = rememberNavController()
 
         Scaffold(
             bottomBar = {
                 BottomNavigation(
-                    onCategoriesClick = { currentScreen = ScreenId.CATEGORIES },
-                    onFavoriteClick = { currentScreen = ScreenId.FAVORITES },
+                    onCategoriesClick = { navController.navigate(Screen.Categories.route) },
+                    onFavoriteClick = { navController.navigate(Screen.Favorites.route) },
                 )
             }
         ) { innerPadding ->
-            when (currentScreen) {
-                ScreenId.CATEGORIES -> {
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Categories.route,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable(route = Screen.Categories.route) {
                     CategoriesScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        onCategoryClick = { categoryId, categoryTitle ->
-                            selectedCategoryId = categoryId
-                            selectedCategoryTitle = categoryTitle
-                            currentScreen = ScreenId.RECIPES
+                        onCategoryClick = { categoryId ->
+                            navController.navigate(Screen.Recipes.createRoute(categoryId))
                         }
                     )
                 }
+                composable(
+                    route = Screen.Recipes.route,
+                    arguments = Screen.Recipes.arguments
+                    ) { backStackEntry ->
+                    val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+                    RecipesScreen(categoryId = categoryId) {
+                        navController.popBackStack()
+                    }
 
-                ScreenId.FAVORITES -> {
-                    FavoritesScreen(modifier = Modifier.padding(innerPadding))
                 }
-
-                ScreenId.RECIPES -> {
-                    RecipesScreen(
-                        categoryId = selectedCategoryId ?: error("Category ID is required"),
-                        categoryTitle = selectedCategoryTitle,
-                        onRecipeClick = { },
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                composable(route = Screen.Favorites.route) {
+                    FavoritesScreen()
                 }
             }
         }

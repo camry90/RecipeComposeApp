@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +30,6 @@ import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 fun RecipesScreen(
     modifier: Modifier = Modifier,
     categoryId: Int?,
-    categoryTitle: String,
     onRecipeClick: (Int) -> Unit,
 ) {
     var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
@@ -48,7 +46,7 @@ fun RecipesScreen(
         }
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
         ScreenHeader(
             imagePainter = painterResource(R.drawable.checker),
             contentDescription = "Recipes",
@@ -66,10 +64,6 @@ fun RecipesScreen(
                     RecipeItem(
                         recipe = recipe,
                         onRecipeClick = onRecipeClick,
-                        modifier = Modifier.padding(
-                            horizontal = Dimens.paddingMedium,
-                            vertical = Dimens.paddingSmall
-                        ),
                     )
                 }
             }

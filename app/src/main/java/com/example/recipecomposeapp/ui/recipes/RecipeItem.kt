@@ -22,18 +22,18 @@ import com.example.recipecomposeapp.ui.theme.Dimens
 @Composable
 fun RecipeItem(
     recipe: RecipeUiModel,
-    onRecipeClick: (Int) -> Unit,
+    onRecipeClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.padding(Dimens.paddingMedium),
-        onClick = { onRecipeClick(recipe.id) },
+        onClick = { onRecipeClick(recipe.id, recipe) },
         shape = RoundedCornerShape(Dimens.shapeRadiusCard),
         elevation = CardDefaults.cardElevation(Dimens.elevationCard),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         Column(
-            modifier = modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             AsyncImage(
                 model = recipe.imageUrl,
@@ -41,11 +41,11 @@ fun RecipeItem(
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(R.drawable.checker),
                 error = painterResource(R.drawable.checker),
-                modifier = Modifier.aspectRatio(1.2f)
+                modifier = Modifier.aspectRatio(2.5f)
             )
             Text(
                 text = recipe.title,
-                modifier = modifier.padding(Dimens.paddingSmall),
+                modifier = Modifier.padding(Dimens.paddingSmall),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
             )

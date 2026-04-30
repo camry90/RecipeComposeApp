@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.Screen
 import com.example.recipecomposeapp.ui.categories.CategoriesScreen
-import com.example.recipecomposeapp.ui.details.RecipeDetailsScreen
+import com.example.recipecomposeapp.ui.recipes.RecipeDetailsScreen
 import com.example.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.example.recipecomposeapp.ui.recipes.RecipesScreen
 import com.example.recipecomposeapp.ui.recipes.model.RecipeUiModel
@@ -39,7 +39,7 @@ fun AppNavHost(
             val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
             RecipesScreen(
                 categoryId = categoryId,
-                onRecipeClick = { categoryId, recipe ->
+                onRecipeClick = { recipeId, recipe ->
                     navController.currentBackStackEntry?.savedStateHandle?.set(
                         key = Constants.KEY_RECIPE_OBJECT,
                         value = recipe

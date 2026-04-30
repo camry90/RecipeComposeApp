@@ -12,7 +12,6 @@ sealed class Screen(val route: String) {
     }
 
     object Favorites : Screen("favorites")
-    object RecipeDetails : Screen("recipe/{recipeId}") {
-        fun createRoute(recipeId: Int) = "recipe/${recipeId}"
+    object RecipeDetails : Screen("recipe_details") {
     }
 }

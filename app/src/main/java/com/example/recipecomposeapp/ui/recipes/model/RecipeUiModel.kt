@@ -23,5 +23,5 @@ fun RecipeDto.toUiModel() = RecipeUiModel(
     ingredients = ingredients.map { it.toUiModel() },
     method = method,
     imageUrl = if (imageUrl.startsWith("http")) imageUrl else Constants.ASSETS_URI_PREFIX + imageUrl,
-    servings = 4
+    servings = servings
 )

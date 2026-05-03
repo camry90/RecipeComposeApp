@@ -61,7 +61,8 @@ fun RecipesScreen(
                 items(recipes, key = { it.id }) { recipe ->
                     RecipeItem(
                         recipe = recipe,
-                        onRecipeClick = onRecipeClick,
+                        onRecipeClick = { recipeId, recipeUiModel ->
+                            onRecipeClick(recipeId, recipeUiModel) }
                     )
                 }
             }

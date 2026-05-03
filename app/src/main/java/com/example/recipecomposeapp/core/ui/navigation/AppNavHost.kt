@@ -40,21 +40,17 @@ fun AppNavHost(
             RecipesScreen(
                 categoryId = categoryId,
                 onRecipeClick = { recipeId, recipe ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                        key = Constants.KEY_RECIPE_OBJECT,
-                        value = recipe
-                    )
-                    navController.navigate(Screen.RecipeDetails.route)
+                    navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
                 }
             )
         }
 
-        composable(route = Screen.RecipeDetails.route) {
-            val recipe = navController
-                .previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(Constants.KEY_RECIPE_OBJECT)
-            recipe?.let {
-                RecipeDetailsScreen(recipe)
-            } ?: Text("Детали не найдены")
+        composable(
+            route = Screen.RecipeDetails.route,
+            arguments = Screen.RecipeDetails.arguments
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt(Constants.KEY_RECIPE_OBJECT) ?: 0
+            RecipeDetailsScreen(recipeId)
         }
 
         composable(route = Screen.Favorites.route) {

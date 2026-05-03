@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -13,12 +14,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.ui.ScreenHeader
-import com.example.recipecomposeapp.ui.recipes.model.RecipeUiModel
+import com.example.recipecomposeapp.data.repository.getRecipeById
+import com.example.recipecomposeapp.ui.recipes.model.toUiModel
 
 @Composable
-fun RecipeDetailsScreen(
-    recipe: RecipeUiModel
-) {
+fun RecipeDetailsScreen(recipeId: Int) {
+    
+    val recipe = remember(recipeId) {
+        getRecipeById(recipeId)?.toUiModel()
+    }
+
+    if (recipe == null) {
+        Text("Детали рецепта не найдены")
+        return
+    }
+
+
     var currentPortions by remember { mutableIntStateOf(recipe.servings) }
 
     val scaledIngredients = remember(currentPortions) {
@@ -31,11 +42,11 @@ fun RecipeDetailsScreen(
         }
     }
 
-//    val portionsText = pluralStringResource(
-//        R.plurals.portions_count,
-//        currentPortions,
-//        currentPortions
-//    )
+    val portionsText = pluralStringResource(
+        R.plurals.portions_count,
+        currentPortions,
+        currentPortions
+    )
 
     Column(
         modifier = Modifier

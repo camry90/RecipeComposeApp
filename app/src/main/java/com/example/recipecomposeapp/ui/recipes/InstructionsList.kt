@@ -10,9 +10,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.recipecomposeapp.ui.theme.Dimens
-import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
 fun InstructionsList(
@@ -30,7 +28,7 @@ fun InstructionsList(
     ) {
         Column {
             methods.forEachIndexed { index, method ->
-                InstructionItem(method)
+                InstructionItem(index + 1, method)
                 if (index < methods.lastIndex) {
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = Dimens.paddingMedium)
@@ -38,19 +36,5 @@ fun InstructionsList(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InstructionsList() {
-    RecipeComposeAppTheme() {
-        InstructionsList(
-            """
-                1. Почистить картошку.
-                2. Сварить картошку.
-                3. Берегу.
-            """.trimIndent()
-        )
     }
 }

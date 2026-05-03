@@ -3,6 +3,6 @@
     <plurals name="portions_count">
         <item quantity="one">%d порция</item>
         <item quantity="few">%d порции</item>
-        <item quantity="many">%d порций</item>
+        <item quantity="other">%d порций</item>
     </plurals>
 </resources>

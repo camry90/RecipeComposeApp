@@ -12,8 +12,8 @@ sealed class Screen(val route: String) {
     }
 
     object Favorites : Screen("favorites")
-    object RecipeDetails : Screen("recipes/{recipeId}") {
-        fun createRoute(recipeId: Int) = "recipes/${recipeId}"
+    object RecipeDetails : Screen("recipe-details/{recipeId}") {
+        fun createRoute(recipeId: Int) = "recipe-details/${recipeId}"
         val arguments = listOf(navArgument("recipeId") { type = NavType.IntType})
     }
 }

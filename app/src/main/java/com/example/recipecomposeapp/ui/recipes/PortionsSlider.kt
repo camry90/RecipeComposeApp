@@ -16,6 +16,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun PortionsSlider(
+    portionsText: String,
     currentPortions: Int,
     onPortionsChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -31,7 +32,7 @@ fun PortionsSlider(
         )
 
         Text(
-            text = "Порции: $currentPortions",
+            text = "$portionsText",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -48,10 +49,10 @@ fun PortionsSlider(
 @Preview(showBackground = true)
 @Composable
 fun PortionsSliderPreview() {
-    RecipeComposeAppTheme() {
-        PortionsSlider(
-            6,
-            {}
-        )
-    }
+//    RecipeComposeAppTheme() {
+//        PortionsSlider(
+//            6,
+//            {}
+//        )
+//    }
 }

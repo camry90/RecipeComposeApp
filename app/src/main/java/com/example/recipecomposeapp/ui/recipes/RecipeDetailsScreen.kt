@@ -19,7 +19,7 @@ import com.example.recipecomposeapp.ui.recipes.model.toUiModel
 
 @Composable
 fun RecipeDetailsScreen(recipeId: Int) {
-    
+
     val recipe = remember(recipeId) {
         getRecipeById(recipeId)?.toUiModel()
     }
@@ -58,7 +58,7 @@ fun RecipeDetailsScreen(recipeId: Int) {
             contentDescription = recipe.title,
             title = recipe.title
         )
-        PortionsSlider(currentPortions, onPortionsChange = { newPortion ->
+        PortionsSlider(portionsText,currentPortions, onPortionsChange = { newPortion ->
             currentPortions = newPortion
         })
         IngredientList(scaledIngredients)

@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.Screen
 import com.example.recipecomposeapp.ui.categories.CategoriesScreen
-import com.example.recipecomposeapp.ui.details.RecipeDetailsScreen
+import com.example.recipecomposeapp.ui.recipes.RecipeDetailsScreen
 import com.example.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.example.recipecomposeapp.ui.recipes.RecipesScreen
 import com.example.recipecomposeapp.ui.recipes.model.RecipeUiModel
@@ -39,22 +39,18 @@ fun AppNavHost(
             val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
             RecipesScreen(
                 categoryId = categoryId,
-                onRecipeClick = { categoryId, recipe ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                        key = Constants.KEY_RECIPE_OBJECT,
-                        value = recipe
-                    )
-                    navController.navigate(Screen.RecipeDetails.route)
+                onRecipeClick = { recipeId, recipe ->
+                    navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
                 }
             )
         }
 
-        composable(route = Screen.RecipeDetails.route) {
-            val recipe = navController
-                .previousBackStackEntry?.savedStateHandle?.get<RecipeUiModel>(Constants.KEY_RECIPE_OBJECT)
-            recipe?.let {
-                RecipeDetailsScreen(recipe)
-            } ?: Text("Детали не найдены")
+        composable(
+            route = Screen.RecipeDetails.route,
+            arguments = Screen.RecipeDetails.arguments
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt(Constants.KEY_RECIPE_OBJECT) ?: 0
+            RecipeDetailsScreen(recipeId)
         }
 
         composable(route = Screen.Favorites.route) {

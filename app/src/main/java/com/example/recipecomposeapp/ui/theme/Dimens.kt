@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 object Dimens {
     val paddingSmall = 8.dp
+    val paddingIngredient = 12.dp
     val paddingMedium = 16.dp
     val paddingBig = 32.dp
     val paddingHeaderText = 10.dp

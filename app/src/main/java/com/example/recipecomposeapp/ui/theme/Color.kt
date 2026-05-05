@@ -25,7 +25,7 @@ val SurfaceVariantColor = Color(0xFF303030) // Тёмно-серый для не
 val DividerColor = Color(0xFFF5F5F5) // Светло-серый для разделителей
 
 // Текст
-val TextPrimaryColor = Color(0xFF000000) // Основной текст
+val TextPrimaryColor = Color(0xFF5F3678) // Основной текст
 val TextSecondaryColor = Color(0xFF666666) // Второстепенный текст (описания)
 
 // Основные акцентные цвета (адаптированные для темной темы)

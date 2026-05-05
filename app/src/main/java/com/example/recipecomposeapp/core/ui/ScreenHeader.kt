@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
@@ -46,6 +47,39 @@ fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: Strin
                 text = title.uppercase(),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(Dimens.paddingHeaderText)
+            )
+        }
+    }
+}
+
+@Composable
+fun ScreenHeader(imagePainter: String, contentDescription: String, title: String) {
+    Box(
+        modifier = Modifier
+            .height(Dimens.heightScreenHeader)
+    ) {
+        AsyncImage(
+            model = imagePainter,
+            contentDescription = title,
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.checker),
+            error = painterResource(R.drawable.checker),
+            modifier = Modifier.fillMaxSize()
+        )
+
+        Surface(
+            Modifier
+                .align(Alignment.BottomStart)
+                .padding(Dimens.paddingMedium),
+            shape = RoundedCornerShape(Dimens.shapeRadiusCard),
+            color = MaterialTheme.colorScheme.surface
+
+        ) {
+            Text(
+                text = title.uppercase(),
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(Dimens.paddingHeaderText)
             )
         }

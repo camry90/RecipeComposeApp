@@ -27,7 +27,8 @@ fun RecipeItem(
 ) {
     Card(
         modifier = modifier.padding(Dimens.paddingMedium),
-        onClick = { onRecipeClick(recipe.id, recipe) },
+        onClick = {
+            onRecipeClick(recipe.id, recipe) },
         shape = RoundedCornerShape(Dimens.shapeRadiusCard),
         elevation = CardDefaults.cardElevation(Dimens.elevationCard),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)

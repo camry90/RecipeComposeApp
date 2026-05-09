@@ -1,10 +1,14 @@
 package com.example.recipecomposeapp.core.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -17,13 +21,20 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
-fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: String) {
+fun ScreenHeader(
+    imagePainter: Painter,
+    contentDescription: String,
+    title: String,
+    showShareButton: Boolean = false,
+    onShareClick: () -> Unit = {},
+) {
     Box(
         modifier = Modifier
             .height(Dimens.heightScreenHeader)
@@ -34,6 +45,23 @@ fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: Strin
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.paddingMedium),
+            horizontalAlignment = Alignment.End
+        ) {
+            if (showShareButton) {
+                Image(
+                    painterResource(R.drawable.share_icon),
+                    contentDescription = "Share",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable { onShareClick() }
+                    )
+            }
+        }
 
         Surface(
             Modifier
@@ -54,7 +82,13 @@ fun ScreenHeader(imagePainter: Painter, contentDescription: String, title: Strin
 }
 
 @Composable
-fun ScreenHeader(imagePainter: String, contentDescription: String, title: String) {
+fun ScreenHeader(
+    imagePainter: String,
+    contentDescription: String,
+    title: String,
+    showShareButton: Boolean,
+    onShareClick: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .height(Dimens.heightScreenHeader)
@@ -67,6 +101,24 @@ fun ScreenHeader(imagePainter: String, contentDescription: String, title: String
             error = painterResource(R.drawable.checker),
             modifier = Modifier.fillMaxSize()
         )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.paddingMedium),
+            horizontalAlignment = Alignment.End
+        ) {
+            if (showShareButton) {
+                Image(
+                    painterResource(R.drawable.share_icon),
+                    contentDescription = "Share",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable { onShareClick() }
+                )
+            }
+        }
+        
 
         Surface(
             Modifier
@@ -93,7 +145,9 @@ fun ScreenHeaderPreview() {
         ScreenHeader(
             imagePainter = painterResource(R.drawable.categories_header),
             contentDescription = "Categories",
-            title = "категории"
+            title = "категории",
+            showShareButton = true,
+            onShareClick = {}
         )
     }
 }

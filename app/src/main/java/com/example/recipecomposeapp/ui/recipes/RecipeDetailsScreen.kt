@@ -8,7 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +24,6 @@ import com.example.recipecomposeapp.ui.recipes.utils.shareRecipe
 @Composable
 fun RecipeDetailsScreen(recipeId: Int) {
 
-
     val context = LocalContext.current
     val recipe = remember(recipeId) {
         getRecipeById(recipeId)?.toUiModel()
@@ -33,9 +34,10 @@ fun RecipeDetailsScreen(recipeId: Int) {
         return
     }
 
-    var currentPortions by remember { mutableIntStateOf(recipe.servings) }
+    var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
+    var isFavorite by rememberSaveable { mutableStateOf(false) }
 
-    val scaledIngredients = remember(currentPortions) {
+    val scaledIngredients = remember(recipe.ingredients, currentPortions) {
         val multiplier = currentPortions.toDouble() / recipe.servings
         recipe.ingredients.map { ingredient ->
             val newAmount = (ingredient.quantity.toDoubleOrNull() ?: 1.0) * multiplier
@@ -61,9 +63,14 @@ fun RecipeDetailsScreen(recipeId: Int) {
             contentDescription = recipe.title,
             title = recipe.title,
             showShareButton = true,
-            onShareClick = { shareRecipe(context, recipe.id, recipe.title) }
+            onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
+            showFavoriteButton = true,
+            onFavoriteToggle = {
+                isFavorite = !isFavorite
+            },
+            isFavorite = isFavorite
         )
-        PortionsSlider(portionsText,currentPortions, onPortionsChange = { newPortion ->
+        PortionsSlider(portionsText, currentPortions, onPortionsChange = { newPortion ->
             currentPortions = newPortion
         })
         IngredientList(scaledIngredients)

@@ -15,7 +15,7 @@ fun shareRecipe(
 
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
-        putExtra(Intent.EXTRA_INTENT, shareText)
+        putExtra(Intent.EXTRA_TEXT, shareText)
     }
     context.startActivity(
         Intent.createChooser(intent, "Поделиться рецептом")

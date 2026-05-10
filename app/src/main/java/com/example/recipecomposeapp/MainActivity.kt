@@ -21,15 +21,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("MainActivity", "onCreate called")
-        Log.d("MainActivity", "intent = $intent")
-        Log.d("MainActivity", "intent.data = ${intent?.data}")
-        Log.d("MainActivity", "intent.action = ${intent?.action}")
-
-        // Сохраняем Deep Link если есть
         intent?.data?.let { uri ->
             deepLink = intent
-            Log.d("MainActivity", "✓ Deep Link найден: $uri")
         }
 
         enableEdgeToEdge()

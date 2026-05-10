@@ -1,5 +1,7 @@
 package com.example.recipecomposeapp.core.ui
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,21 +13,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+
 
 @Composable
 fun ScreenHeader(
@@ -34,13 +46,23 @@ fun ScreenHeader(
     title: String,
     showShareButton: Boolean = false,
     onShareClick: () -> Unit = {},
+    showFavoriteButton: Boolean = false,
+    onFavoriteToggle: () -> Unit = {},
+    isFavorite: Boolean = false,
 ) {
+    val heartFull = rememberVectorPainter(
+        image = ImageVector.vectorResource(R.drawable.ic_heart)
+    )
+    val heartEmpty = rememberVectorPainter(
+        image = ImageVector.vectorResource(R.drawable.ic_heart_empty)
+    )
+
     Box(
         modifier = Modifier
             .height(Dimens.heightScreenHeader)
     ) {
         Image(
-            painter = imagePainter ,
+            painter = imagePainter,
             contentDescription = contentDescription,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -52,14 +74,31 @@ fun ScreenHeader(
                 .padding(Dimens.paddingMedium),
             horizontalAlignment = Alignment.End
         ) {
+            if (showFavoriteButton) {
+                Crossfade(
+                    targetState = isFavorite,
+                    animationSpec = tween(300),
+                    label = "Favorite"
+                ) { isCurrentlyFavorite ->
+                    Icon(
+                        painter = if (isCurrentlyFavorite) heartFull else heartEmpty,
+                        contentDescription = "Favourite",
+                        tint = Color.Unspecified,
+                        modifier = Modifier
+                            .size(Dimens.iconSize)
+                            .clickable { onFavoriteToggle() }
+                    )
+                }
+            }
+
             if (showShareButton) {
                 Image(
                     painterResource(R.drawable.share_icon),
                     contentDescription = "Share",
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(Dimens.iconSize)
                         .clickable { onShareClick() }
-                    )
+                )
             }
         }
 
@@ -88,7 +127,17 @@ fun ScreenHeader(
     title: String,
     showShareButton: Boolean,
     onShareClick: () -> Unit,
+    showFavoriteButton: Boolean = false,
+    onFavoriteToggle: () -> Unit = {},
+    isFavorite: Boolean = false,
 ) {
+    val heartFull = rememberVectorPainter(
+        image = ImageVector.vectorResource(R.drawable.ic_heart)
+    )
+    val heartEmpty = rememberVectorPainter(
+        image = ImageVector.vectorResource(R.drawable.ic_heart_empty)
+    )
+
     Box(
         modifier = Modifier
             .height(Dimens.heightScreenHeader)
@@ -108,17 +157,34 @@ fun ScreenHeader(
                 .padding(Dimens.paddingMedium),
             horizontalAlignment = Alignment.End
         ) {
+            if (showFavoriteButton) {
+                Crossfade(
+                    targetState = isFavorite,
+                    animationSpec = tween(300),
+                    label = "Favorite",
+                ) { isCurrentlyFavorite ->
+                    Icon(
+                        painter = if (isCurrentlyFavorite) heartFull else heartEmpty,
+                        contentDescription = "Favorite",
+                        tint = Color.Unspecified,
+                        modifier = Modifier
+                            .size(Dimens.iconSize)
+                            .clickable { onFavoriteToggle() }
+                    )
+                }
+            }
+
             if (showShareButton) {
                 Image(
                     painterResource(R.drawable.share_icon),
                     contentDescription = "Share",
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(Dimens.iconSize)
                         .clickable { onShareClick() }
                 )
             }
         }
-        
+
 
         Surface(
             Modifier
@@ -147,7 +213,8 @@ fun ScreenHeaderPreview() {
             contentDescription = "Categories",
             title = "категории",
             showShareButton = true,
-            onShareClick = {}
+            onShareClick = {},
+            showFavoriteButton = true
         )
     }
 }

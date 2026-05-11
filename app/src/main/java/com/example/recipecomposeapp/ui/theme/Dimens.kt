@@ -15,7 +15,7 @@ object Dimens {
     val heightCard = 220.dp
     val heightHeaderText = 44.dp
     val elevationCard = 4.dp
-    val iconSize = 24.dp
+    val iconSize = 40.dp
     val heightScreenHeader = 224.dp
     val sliderThumbSize = 20.dp
 

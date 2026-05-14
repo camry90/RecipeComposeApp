@@ -5,7 +5,13 @@ import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +21,7 @@ import com.example.recipecomposeapp.ui.categories.CategoriesScreen
 import com.example.recipecomposeapp.ui.recipes.RecipeDetailsScreen
 import com.example.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.example.recipecomposeapp.ui.recipes.RecipesScreen
+import com.example.recipecomposeapp.ui.recipes.utils.FavoritePrefsManager
 import kotlinx.coroutines.delay
 
 @Composable
@@ -23,6 +30,8 @@ fun AppNavHost(
     deepLinkIntent: Intent?,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val favoritePrefs = remember { FavoritePrefsManager(context) }
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -91,7 +100,21 @@ fun AppNavHost(
             arguments = Screen.RecipeDetails.arguments
         ) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getInt(Constants.KEY_RECIPE_OBJECT) ?: 0
-            RecipeDetailsScreen(recipeId)
+            var isFavorite by remember(recipeId) {
+                mutableStateOf(favoritePrefs.isFavorite(recipeId))
+            }
+            RecipeDetailsScreen(
+                recipeId,
+                onFavoriteToggle = {
+                    if (isFavorite) {
+                        favoritePrefs.removeFromFavorites(recipeId)
+                    } else {
+                        favoritePrefs.addToFavorites(recipeId)
+                    }
+                    isFavorite = !isFavorite
+                },
+                isFavorite = isFavorite,
+            )
         }
 
         composable(route = Screen.Favorites.route) {

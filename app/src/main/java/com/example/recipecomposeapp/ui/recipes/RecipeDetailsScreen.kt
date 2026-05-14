@@ -19,10 +19,15 @@ import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.data.repository.getRecipeById
 import com.example.recipecomposeapp.ui.recipes.model.toUiModel
+import com.example.recipecomposeapp.ui.recipes.utils.FavoritePrefsManager
 import com.example.recipecomposeapp.ui.recipes.utils.shareRecipe
 
 @Composable
-fun RecipeDetailsScreen(recipeId: Int) {
+fun RecipeDetailsScreen(
+    recipeId: Int,
+    isFavorite: Boolean,
+    onFavoriteToggle: () -> Unit,
+) {
 
     val context = LocalContext.current
     val recipe = remember(recipeId) {
@@ -35,7 +40,6 @@ fun RecipeDetailsScreen(recipeId: Int) {
     }
 
     var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
-    var isFavorite by rememberSaveable { mutableStateOf(false) }
 
     val scaledIngredients = remember(recipe.ingredients, currentPortions) {
         val multiplier = currentPortions.toDouble() / recipe.servings
@@ -65,9 +69,7 @@ fun RecipeDetailsScreen(recipeId: Int) {
             showShareButton = true,
             onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
             showFavoriteButton = true,
-            onFavoriteToggle = {
-                isFavorite = !isFavorite
-            },
+            onFavoriteToggle = onFavoriteToggle,
             isFavorite = isFavorite
         )
         PortionsSlider(portionsText, currentPortions, onPortionsChange = { newPortion ->

@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 
 class FavoritePrefsManager(context: Context) {
-    val sharedPreferences: SharedPreferences = context.getSharedPreferences("recipe_app_prefs", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("recipe_app_prefs", Context.MODE_PRIVATE)
 
     fun isFavorite(recipeId: Int): Boolean {
         val favoriteRecipeId = sharedPreferences.getStringSet("favorite_recipe_ids", emptySet()) ?: emptySet()
@@ -18,7 +18,6 @@ class FavoritePrefsManager(context: Context) {
         updatedFavorites.add(recipeId.toString())
         sharedPreferences.edit {
             putStringSet("favorite_recipe_ids", updatedFavorites)
-            apply()
         }
     }
 
@@ -28,7 +27,6 @@ class FavoritePrefsManager(context: Context) {
         updatedFavorites.remove(recipeId.toString())
         sharedPreferences.edit {
             putStringSet("favorite_recipe_ids", updatedFavorites)
-            apply()
         }
     }
 

@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.recipecomposeapp.R
-import com.example.recipecomposeapp.core.ui.ScreenHeader
+import com.example.recipecomposeapp.core.common.ui.ScreenHeader
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable

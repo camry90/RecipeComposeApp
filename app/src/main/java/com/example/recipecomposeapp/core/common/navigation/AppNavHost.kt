@@ -1,8 +1,9 @@
-package com.example.recipecomposeapp.core.ui.navigation
+package com.example.recipecomposeapp.core.common.navigation
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,10 +17,10 @@ import androidx.navigation.compose.composable
 import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.Screen
 import com.example.recipecomposeapp.ui.categories.CategoriesScreen
-import com.example.recipecomposeapp.ui.recipes.RecipeDetailsScreen
+import com.example.recipecomposeapp.ui.details.RecipeDetailsScreen
 import com.example.recipecomposeapp.ui.favorites.FavoritesScreen
 import com.example.recipecomposeapp.ui.recipes.RecipesScreen
-import com.example.recipecomposeapp.ui.recipes.utils.FavoriteDataStoreManager
+import com.example.recipecomposeapp.core.common.data.local.FavoriteDataStoreManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -96,11 +97,10 @@ fun AppNavHost(
             arguments = Screen.RecipeDetails.arguments
         ) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getInt(Constants.KEY_RECIPE_OBJECT) ?: 0
-            var isFavorite by remember { mutableStateOf(false) }
+            val isFavorite by favoriteManager
+                .isFavoriteFlow(recipeId)
+                .collectAsState(initial = false)
 
-            LaunchedEffect(recipeId) {
-                isFavorite = favoriteManager.isFavorite(recipeId)
-            }
             RecipeDetailsScreen(
                 recipeId,
                 onFavoriteToggle = {
@@ -110,7 +110,6 @@ fun AppNavHost(
                         } else {
                             favoriteManager.addFavorite(recipeId)
                         }
-                        isFavorite = !isFavorite
                     }
                 },
                 isFavorite = isFavorite,

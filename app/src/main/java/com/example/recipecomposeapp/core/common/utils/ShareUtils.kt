@@ -1,4 +1,4 @@
-package com.example.recipecomposeapp.ui.recipes.utils
+package com.example.recipecomposeapp.core.common.utils
 
 import android.content.Context
 import android.content.Intent

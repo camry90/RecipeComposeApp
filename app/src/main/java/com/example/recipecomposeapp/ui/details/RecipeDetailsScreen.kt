@@ -1,4 +1,4 @@
-package com.example.recipecomposeapp.ui.recipes
+package com.example.recipecomposeapp.ui.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -16,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import com.example.recipecomposeapp.R
-import com.example.recipecomposeapp.core.ui.ScreenHeader
+import com.example.recipecomposeapp.core.common.ui.ScreenHeader
 import com.example.recipecomposeapp.data.repository.getRecipeById
+import com.example.recipecomposeapp.ui.details.model.toUiModel
+import com.example.recipecomposeapp.core.common.utils.shareRecipe
+import com.example.recipecomposeapp.ui.details.components.PortionsSlider
 import com.example.recipecomposeapp.ui.recipes.model.toUiModel
-import com.example.recipecomposeapp.ui.recipes.utils.FavoritePrefsManager
-import com.example.recipecomposeapp.ui.recipes.utils.shareRecipe
 
 @Composable
 fun RecipeDetailsScreen(

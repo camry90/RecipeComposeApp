@@ -1,10 +1,9 @@
-package com.example.recipecomposeapp.ui.recipes.utils
+package com.example.recipecomposeapp.core.common.data.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 

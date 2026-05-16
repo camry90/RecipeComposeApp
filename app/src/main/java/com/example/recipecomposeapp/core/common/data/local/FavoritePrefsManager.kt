@@ -1,4 +1,4 @@
-package com.example.recipecomposeapp.ui.recipes.utils
+package com.example.recipecomposeapp.core.common.data.local
 
 import android.content.Context
 import android.content.SharedPreferences

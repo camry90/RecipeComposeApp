@@ -1,4 +1,4 @@
-package com.example.recipecomposeapp.core.ui
+package com.example.recipecomposeapp.core.common.ui
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween

@@ -1,4 +1,4 @@
-package com.example.recipecomposeapp.ui.recipes
+package com.example.recipecomposeapp.ui.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +10,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.recipecomposeapp.ui.details.components.InstructionItem
 import com.example.recipecomposeapp.ui.theme.Dimens
 
 @Composable

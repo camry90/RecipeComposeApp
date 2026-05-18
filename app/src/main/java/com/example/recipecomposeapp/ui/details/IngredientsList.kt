@@ -1,6 +1,5 @@
-package com.example.recipecomposeapp.ui.recipes
+package com.example.recipecomposeapp.ui.details
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.recipecomposeapp.ui.recipes.model.IngredientUiModel
+import com.example.recipecomposeapp.ui.details.components.IngredientItem
+import com.example.recipecomposeapp.ui.details.model.IngredientUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 

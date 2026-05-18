@@ -1,6 +1,12 @@
 package com.example.recipecomposeapp.ui.favorites
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,10 +14,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.common.ui.ScreenHeader
+import com.example.recipecomposeapp.data.model.RecipeDto
+import com.example.recipecomposeapp.ui.recipes.RecipeItem
+import com.example.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+import com.example.recipecomposeapp.ui.recipes.model.toUiModel
+import com.example.recipecomposeapp.ui.theme.Dimens
 
 @Composable
 fun FavoritesScreen(
+    recipes: List<RecipeDto>,
+    onFavoriteClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -20,7 +33,28 @@ fun FavoritesScreen(
             contentDescription = "Favorites",
             title = "избранное"
         )
-        Text("Список рецептов: ")
+        if (recipes.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = Dimens.paddingMedium),
+            ) {
+                Text(
+                    text = "Добавьте рецепты в избранное".uppercase(),
+                    style = MaterialTheme.typography.displayLarge
+                )
+            }
+        } else {
+            LazyColumn(modifier = Modifier) {
+                items(recipes, key = { it.id }) { item ->
+                    val recipe = item.toUiModel()
+                    RecipeItem(
+                        recipe = recipe,
+                        onRecipeClick = onFavoriteClick,
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -28,6 +62,6 @@ fun FavoritesScreen(
 @Composable
 fun FavoritesScreenPreview() {
     RecipeComposeAppTheme() {
-        FavoritesScreen()
+//        FavoritesScreen()
     }
 }

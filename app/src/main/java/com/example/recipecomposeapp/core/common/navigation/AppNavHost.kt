@@ -5,10 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -33,11 +31,14 @@ fun AppNavHost(
     val context = LocalContext.current
     val favoriteManager = remember { FavoriteDataStoreManager(context) }
     val coroutineScope = rememberCoroutineScope()
+    val favoriteList by favoriteManager
+        .getRecipeIdsFlow()
+        .collectAsState(initial = emptyList())
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
 
-            val recipeId: Int? = when(uri.scheme) {
+            val recipeId: Int? = when (uri.scheme) {
                 "recipeapp" -> {
                     if (uri.host == "recipe") {
                         uri.pathSegments[0].toIntOrNull()
@@ -53,6 +54,7 @@ fun AppNavHost(
                         null
                     }
                 }
+
                 else -> {
                     null
                 }
@@ -117,7 +119,12 @@ fun AppNavHost(
         }
 
         composable(route = Screen.Favorites.route) {
-            FavoritesScreen()
+            FavoritesScreen(
+                recipes = favoriteList,
+                onFavoriteClick = { recipeId, recipe ->
+                    navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
+                }
+            )
         }
     }
 }

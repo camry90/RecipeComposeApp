@@ -2,8 +2,6 @@ package com.example.recipecomposeapp.core.common.data.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import com.example.recipecomposeapp.data.model.RecipeDto
-import com.example.recipecomposeapp.data.repository.getRecipeById
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -18,12 +16,6 @@ class FavoriteDataStoreManager(private val context: Context) {
     fun isFavoriteFlow(recipeId: Int): Flow<Boolean> {
         return getFavoriteIdsFlow().map { favoriteIds ->
             favoriteIds.contains(recipeId.toString())
-        }
-    }
-
-    fun getRecipeIdsFlow(): Flow<List<RecipeDto>> {
-        return getFavoriteIdsFlow().map { ids ->
-            ids.mapNotNull { id -> id.toIntOrNull()?.let { getRecipeById(it) } }
         }
     }
 

@@ -31,9 +31,6 @@ fun AppNavHost(
     val context = LocalContext.current
     val favoriteManager = remember { FavoriteDataStoreManager(context) }
     val coroutineScope = rememberCoroutineScope()
-    val favoriteList by favoriteManager
-        .getRecipeIdsFlow()
-        .collectAsState(initial = emptyList())
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -120,7 +117,7 @@ fun AppNavHost(
 
         composable(route = Screen.Favorites.route) {
             FavoritesScreen(
-                recipes = favoriteList,
+                favoriteManager = favoriteManager,
                 onFavoriteClick = { recipeId, recipe ->
                     navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
                 }

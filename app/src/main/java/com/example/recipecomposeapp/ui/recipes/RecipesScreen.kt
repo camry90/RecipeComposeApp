@@ -18,9 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.common.ui.ScreenHeader
-import com.example.recipecomposeapp.data.repository.getRecipesByCategoryId
+import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.ui.recipes.model.RecipeUiModel
-import com.example.recipecomposeapp.ui.details.model.toUiModel
 import com.example.recipecomposeapp.ui.recipes.model.toUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
@@ -31,6 +30,7 @@ fun RecipesScreen(
     categoryId: Int?,
     onRecipeClick: (Int, RecipeUiModel) -> Unit,
 ) {
+    val repository = RecipesRepository()
     var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
 
@@ -38,7 +38,7 @@ fun RecipesScreen(
         isLoading = true
         try {
             categoryId?.let {
-                recipes = getRecipesByCategoryId(it).map { dto -> dto.toUiModel() }
+                recipes = repository.getRecipesByCategoryId(it).map { dto -> dto.toUiModel() }
             }
         } finally {
             isLoading = false

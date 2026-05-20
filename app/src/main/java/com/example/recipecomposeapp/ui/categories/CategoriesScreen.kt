@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.recipecomposeapp.CATEGORIES_COLUMNS
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.common.ui.ScreenHeader
-import com.example.recipecomposeapp.data.repository.getCategories
+import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.ui.categories.model.toUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
@@ -23,7 +23,8 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier,
     onCategoryClick: (Int) -> Unit
 ) {
-    val category = getCategories()
+    val repository = RecipesRepository()
+    val category = repository.getCategories()
     Column(modifier = modifier) {
         ScreenHeader(
             imagePainter = painterResource(R.drawable.categories_header),

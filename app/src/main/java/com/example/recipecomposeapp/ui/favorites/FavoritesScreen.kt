@@ -36,11 +36,9 @@ fun FavoritesScreen(
     onFavoriteClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val favoriteList by remember {
         favoriteManager.getFavoriteIdsFlow().map { ids ->
-            ids.mapNotNull { id -> repository.getRecipeById(id.toInt()) }
+            ids.mapNotNull { id -> id.toIntOrNull()?.let { repository.getRecipeById(it) } }
         }
     }.collectAsState(initial = emptyList())
 

@@ -16,9 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.common.ui.ScreenHeader
-import com.example.recipecomposeapp.data.repository.getRecipeById
 import com.example.recipecomposeapp.ui.details.model.toUiModel
 import com.example.recipecomposeapp.core.common.utils.shareRecipe
+import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.ui.details.components.PortionsSlider
 import com.example.recipecomposeapp.ui.recipes.model.toUiModel
 
@@ -28,10 +28,10 @@ fun RecipeDetailsScreen(
     isFavorite: Boolean,
     onFavoriteToggle: () -> Unit,
 ) {
-
+    val repository = RecipesRepository()
     val context = LocalContext.current
     val recipe = remember(recipeId) {
-        getRecipeById(recipeId)?.toUiModel()
+        repository.getRecipeById(recipeId)?.toUiModel()
     }
 
     if (recipe == null) {

@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.recipecomposeapp.core.common.navigation.AppNavHost
-import com.example.recipecomposeapp.core.common.navigation.BottomNavigation
+import com.example.recipecomposeapp.core.navigation.AppNavHost
+import com.example.recipecomposeapp.core.navigation.BottomNavigation
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable

@@ -72,7 +72,7 @@ fun AppNavHost(
 
         composable(route = Screen.Categories.route) {
             CategoriesScreen(
-                onCategoryClick = { categoryId ->
+                onCategoryClick = { categoryId, title, imageUrl ->
                     navController.navigate(Screen.Recipes.createRoute(categoryId))
                 }
             )

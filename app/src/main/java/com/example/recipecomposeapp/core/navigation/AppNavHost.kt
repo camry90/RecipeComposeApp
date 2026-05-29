@@ -9,6 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +22,7 @@ import com.example.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import com.example.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import com.example.recipecomposeapp.features.recipes.ui.RecipesScreen
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
+import com.example.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -72,8 +76,8 @@ fun AppNavHost(
 
         composable(route = Screen.Categories.route) {
             CategoriesScreen(
-                onCategoryClick = { categoryId, title, imageUrl ->
-                    navController.navigate(Screen.Recipes.createRoute(categoryId))
+                onCategoryClick = { categoryId, categoryTitle, categoryImageUrl ->
+                    navController.navigate(Screen.Recipes.createRoute(categoryId, categoryTitle, categoryImageUrl))
                 }
             )
         }
@@ -82,9 +86,15 @@ fun AppNavHost(
             route = Screen.Recipes.route,
             arguments = Screen.Recipes.arguments
         ) { backStackEntry ->
-            val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
+            val viewModel: RecipesViewModel = viewModel(
+                factory = viewModelFactory {
+                   initializer {
+                       RecipesViewModel(saveStateHandle = backStackEntry.savedStateHandle)
+                   }
+                }
+            )
             RecipesScreen(
-                categoryId = categoryId,
+                viewModel = viewModel,
                 onRecipeClick = { recipeId, recipe ->
                     navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
                 }

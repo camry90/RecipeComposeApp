@@ -1,14 +1,19 @@
 package com.example.recipecomposeapp
 
+import android.net.Uri
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 sealed class Screen(val route: String) {
 
     object Categories : Screen("categories")
-    object Recipes : Screen("recipes/{categoryId}") {
-        fun createRoute(categoryId: Int) = "recipes/${categoryId}"
-        val arguments = listOf(navArgument("categoryId") { type = NavType.IntType })
+    object Recipes : Screen("recipes/{categoryId}/{categoryTitle}/{categoryImageUrl}") {
+        fun createRoute(categoryId: Int, title: String, imageUrl: String) = "recipes/${categoryId}/${Uri.encode(title)}/${Uri.encode(imageUrl)}"
+        val arguments = listOf(
+            navArgument("categoryId") { type = NavType.IntType },
+            navArgument("categoryTitle") { type = NavType.StringType },
+            navArgument("categoryImageUrl") { type = NavType.StringType },
+        )
     }
 
     object Favorites : Screen("favorites")

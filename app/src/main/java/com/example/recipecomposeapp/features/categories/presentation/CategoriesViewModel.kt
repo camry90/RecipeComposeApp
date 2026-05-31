@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CategoriesViewModel(val repository: RecipesRepository = RecipesRepository()) : ViewModel() {
-
+class CategoriesViewModel(private val repository: RecipesRepository = RecipesRepository()) : ViewModel() {
     private val _uiState = MutableStateFlow(CategoryUiState())
     val uiState: StateFlow<CategoryUiState> = _uiState.asStateFlow()
 

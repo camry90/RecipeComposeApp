@@ -34,7 +34,6 @@ fun AppNavHost(
 ) {
     val context = LocalContext.current
     val favoriteManager = remember { FavoriteDataStoreManager(context) }
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -106,28 +105,11 @@ fun AppNavHost(
             arguments = Screen.RecipeDetails.arguments
         ) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getInt(Constants.KEY_RECIPE_OBJECT) ?: 0
-            val isFavorite by favoriteManager
-                .isFavoriteFlow(recipeId)
-                .collectAsState(initial = false)
-
-            RecipeDetailsScreen(
-                recipeId,
-                onFavoriteToggle = {
-                    coroutineScope.launch {
-                        if (isFavorite) {
-                            favoriteManager.removeFavorite(recipeId)
-                        } else {
-                            favoriteManager.addFavorite(recipeId)
-                        }
-                    }
-                },
-                isFavorite = isFavorite,
-            )
+            RecipeDetailsScreen(recipeId)
         }
 
         composable(route = Screen.Favorites.route) {
             FavoritesScreen(
-                favoriteManager = favoriteManager,
                 onFavoriteClick = { recipeId, recipe ->
                     navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
                 }

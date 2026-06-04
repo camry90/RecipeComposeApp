@@ -17,7 +17,16 @@ data class RecipeUiModel(
     val method: String,
     val imageUrl: String,
     val servings: Int,
-) : Parcelable
+) : Parcelable {
+    fun scaledIngredients(toServings: Double): List<IngredientUiModel> {
+        val multiplier = toServings / servings.toDouble()
+        return ingredients.map { ingredient ->
+            val newAmount = (ingredient.quantity.toDoubleOrNull() ?: 1.0) * multiplier
+            ingredient.copy(quantity = newAmount.toString())
+        }
+    }
+}
+
 
 fun RecipeDto.toUiModel() = RecipeUiModel(
     id = id,

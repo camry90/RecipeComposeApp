@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,10 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.data.repository.RecipesRepository
+import com.example.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.example.recipecomposeapp.features.recipes.ui.RecipeItem
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
@@ -29,16 +32,12 @@ import kotlin.collections.emptyList
 
 @Composable
 fun FavoritesScreen(
-    repository: RecipesRepository = RecipesRepository(),
-    favoriteManager: FavoriteDataStoreManager,
     onFavoriteClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val favoriteList by remember {
-        favoriteManager.getFavoriteIdsFlow().map { ids ->
-            ids.mapNotNull { id -> id.toIntOrNull()?.let { repository.getRecipeById(it) } }
-        }
-    }.collectAsState(initial = emptyList())
+    val viewModel: FavoritesViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
 
     Column(modifier = modifier) {
         ScreenHeader(
@@ -46,25 +45,39 @@ fun FavoritesScreen(
             contentDescription = "Favorites",
             title = "избранное"
         )
-        if (favoriteList.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = Dimens.paddingMedium),
-            ) {
+
+        when {
+            uiState.isLoading -> {
+                CircularProgressIndicator()
+            }
+
+            uiState.error != null -> {
                 Text(
-                    text = "Добавьте рецепты в избранное".uppercase(),
-                    style = MaterialTheme.typography.displayLarge
+                    text = "${uiState.error}"
                 )
             }
-        } else {
-            LazyColumn(modifier = Modifier) {
-                items(favoriteList, key = { it.id }) { item ->
-                    val recipe = item.toUiModel()
-                    RecipeItem(
-                        recipe = recipe,
-                        onRecipeClick = onFavoriteClick,
+
+            uiState.isEmpty -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = Dimens.paddingMedium),
+                ) {
+                    Text(
+                        text = "Добавьте рецепты в избранное".uppercase(),
+                        style = MaterialTheme.typography.displayLarge
                     )
+                }
+            }
+
+            else -> {
+                LazyColumn(modifier = Modifier) {
+                    items(uiState.favoriteRecipes, key = { it.id }) { item ->
+                        RecipeItem(
+                            recipe = item,
+                            onRecipeClick = onFavoriteClick,
+                        )
+                    }
                 }
             }
         }

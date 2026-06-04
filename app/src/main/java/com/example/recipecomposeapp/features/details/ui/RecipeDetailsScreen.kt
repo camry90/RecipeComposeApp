@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -14,67 +17,63 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.application
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.core.utils.shareRecipe
 import com.example.recipecomposeapp.data.repository.RecipesRepository
+import com.example.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.example.recipecomposeapp.features.details.ui.components.PortionsSlider
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
 
 @Composable
 fun RecipeDetailsScreen(
-    recipeId: Int,
-    isFavorite: Boolean,
-    onFavoriteToggle: () -> Unit,
+    recipeId: Int
 ) {
-    val repository = RecipesRepository()
     val context = LocalContext.current
-    val recipe = remember(recipeId) {
-        repository.getRecipeById(recipeId)?.toUiModel()
+    val viewModel: RecipeDetailsViewModel = viewModel()
+    LaunchedEffect(recipeId) {
+        viewModel.initializeRecipe(recipeId)
     }
-
-    if (recipe == null) {
-        Text("Детали рецепта не найдены")
-        return
-    }
-
-    var currentPortions by rememberSaveable { mutableIntStateOf(recipe.servings) }
-
-    val scaledIngredients = remember(recipe.ingredients, currentPortions) {
-        val multiplier = currentPortions.toDouble() / recipe.servings
-        recipe.ingredients.map { ingredient ->
-            val newAmount = (ingredient.quantity.toDoubleOrNull() ?: 1.0) * multiplier
-            ingredient.copy(
-                quantity = newAmount.toString()
-            )
-        }
-    }
-
+    val uiState by viewModel.uiState.collectAsState()
     val portionsText = pluralStringResource(
         R.plurals.portions_count,
-        currentPortions,
-        currentPortions
+        uiState.servingsCount,
+        uiState.servingsCount
     )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         ScreenHeader(
-            imagePainter = recipe.imageUrl,
-            contentDescription = recipe.title,
-            title = recipe.title,
+            imagePainter = uiState.recipe?.imageUrl ?: "",
+            contentDescription = uiState.recipe?.title ?: "",
+            title = uiState.recipe?.title ?: "",
             showShareButton = true,
-            onShareClick = { shareRecipe(context, recipe.id, recipe.title) },
+            onShareClick = { shareRecipe(context, uiState.recipe?.id ?: 0, uiState.recipe?.title ?: "") },
             showFavoriteButton = true,
-            onFavoriteToggle = onFavoriteToggle,
-            isFavorite = isFavorite
+            onFavoriteToggle = { viewModel.toggleFavorite() },
+            isFavorite = uiState.isFavorite
         )
-        PortionsSlider(portionsText, currentPortions, onPortionsChange = { newPortion ->
-            currentPortions = newPortion
-        })
-        IngredientList(scaledIngredients)
-        InstructionsList(recipe.method)
+    when {
+        uiState.isLoading -> {
+            CircularProgressIndicator()
+        }
+        uiState.error != null -> {
+            Text(
+                text = "${uiState.error}"
+            )
+        }
+        else -> {
+                PortionsSlider(portionsText, uiState.servingsCount, onPortionsChange = { newPortion ->
+                    viewModel.updatePortions(newPortion)
+                })
+                uiState.recipe?.scaledIngredients(uiState.servingsCount.toDouble())?.let { IngredientList(it) }
+                InstructionsList(uiState.recipe?.method ?: "")
+            }
+        }
     }
 }

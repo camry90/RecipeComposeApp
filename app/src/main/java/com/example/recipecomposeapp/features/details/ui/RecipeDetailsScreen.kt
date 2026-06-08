@@ -60,7 +60,7 @@ fun RecipeDetailsScreen(
                 PortionsSlider(portionsText, uiState.currentPortions, onPortionsChange = { newPortion ->
                     viewModel.updatePortions(newPortion)
                 })
-                uiState.recipe?.scaledIngredients(uiState.currentPortions.toDouble())?.let { IngredientList(it) }
+                IngredientList(uiState.scaledIngredients)
                 InstructionsList(uiState.recipe?.method ?: "")
             }
         }

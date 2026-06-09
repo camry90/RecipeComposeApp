@@ -63,6 +63,7 @@ class RecipeDetailsViewModel(
                         currentRecipe.copy(
                             recipe = recipe,
                             isLoading = false,
+                            scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
                         )
                     }
                 }

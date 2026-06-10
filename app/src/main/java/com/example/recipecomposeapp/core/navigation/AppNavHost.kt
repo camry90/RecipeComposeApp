@@ -22,6 +22,7 @@ import com.example.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import com.example.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import com.example.recipecomposeapp.features.recipes.ui.RecipesScreen
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
+import com.example.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.example.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,8 +33,6 @@ fun AppNavHost(
     deepLinkIntent: Intent?,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val favoriteManager = remember { FavoriteDataStoreManager(context) }
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -104,8 +103,10 @@ fun AppNavHost(
             route = Screen.RecipeDetails.route,
             arguments = Screen.RecipeDetails.arguments
         ) { backStackEntry ->
-            val recipeId = backStackEntry.arguments?.getInt(Constants.KEY_RECIPE_OBJECT) ?: 0
-            RecipeDetailsScreen(recipeId)
+           val viewModel: RecipeDetailsViewModel = viewModel(
+               factory = RecipeDetailsViewModel.Factory
+           )
+            RecipeDetailsScreen(viewModel)
         }
 
         composable(route = Screen.Favorites.route) {

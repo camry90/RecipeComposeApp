@@ -30,14 +30,20 @@ class MainActivity : ComponentActivity() {
         val thread = Thread {
             val url = URL("https://recipes.androidsprint.ru/api/category")
             val connection = url.openConnection() as HttpURLConnection
-            connection.connect()
-            val data = connection.getInputStream().bufferedReader().readText()
-            Log.i("!!!", "Body: $data" )
-            val json = Json { ignoreUnknownKeys = true }
-            val deserializeData = json.decodeFromString<List<CategoryDto>>(data)
-            Log.i("!!!", "Количество категорий: ${deserializeData.size}")
-            Log.i("!!!", "Названия категорий: ${deserializeData.joinToString { category -> category.title }}")
-            Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+            try {
+                connection.connect()
+                val data = connection.getInputStream().bufferedReader().use { it.readText() }
+                Log.i("!!!", "Body: $data" )
+                val json = Json { ignoreUnknownKeys = true }
+                val deserializeData = json.decodeFromString<List<CategoryDto>>(data)
+                Log.i("!!!", "Количество категорий: ${deserializeData.size}")
+                Log.i("!!!", "Названия категорий: ${deserializeData.joinToString { category -> category.title }}")
+                Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+            } catch (e: Exception) {
+                Log.i("!!!", "Ошибка: ${e.message}")
+            } finally {
+                connection.disconnect()
+            }
         }
         thread.start()
 

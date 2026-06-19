@@ -16,6 +16,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.ui.ScreenHeader
+import com.example.recipecomposeapp.core.utils.methodToString
 import com.example.recipecomposeapp.core.utils.shareRecipe
 import com.example.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.example.recipecomposeapp.features.details.ui.components.PortionsSlider
@@ -61,7 +62,7 @@ fun RecipeDetailsScreen(
                     viewModel.updatePortions(newPortion)
                 })
                 IngredientList(uiState.scaledIngredients)
-                InstructionsList(uiState.recipe?.method ?: "")
+                InstructionsList((methodToString(uiState.recipe?.method)))
             }
         }
     }

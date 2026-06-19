@@ -14,7 +14,7 @@ data class RecipeUiModel(
     val id: Int,
     val title: String,
     val ingredients: List<IngredientUiModel>,
-    val method: String,
+    val method: List<String>,
     val imageUrl: String,
     val servings: Int,
 ) : Parcelable {

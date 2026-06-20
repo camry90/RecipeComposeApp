@@ -1,7 +1,5 @@
 package com.example.recipecomposeapp
 
-import android.R.attr.data
-import android.app.DownloadManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,8 +14,6 @@ import com.example.recipecomposeapp.data.model.RecipeDto
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.concurrent.thread
@@ -32,39 +28,40 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        threadPool.execute {
+        thread {
             try {
                 val request = Request.Builder()
                     .url("https://recipes.androidsprint.ru/api/category")
                     .build()
 
                 val response = okHttpClient.newCall(request).execute()
-                val body = response.body.string()
-                val categories = json.decodeFromString<List<CategoryDto>>(body)
+                val body = response.body?.string()
+                val categories = body?.let { json.decodeFromString<List<CategoryDto>>(it) }
 
-                for (category in categories) {
-                    threadPool.execute {
-                        val threadName = Thread.currentThread().name
-                        try {
-                            val request = Request.Builder()
-                                .url("https://recipes.androidsprint.ru/api/category/${category.id}/recipes")
-                                .build()
-                            val response = okHttpClient.newCall(request).execute()
-                            val body = response.body.string()
-                            val recipes = json.decodeFromString<List<RecipeDto>>(body)
-                            Log.i(
-                                "Pool",
-                                "Имя потока: $threadName, название категории: ${category.title}, количество рецептов: ${recipes.size}"
-                            )
-                        } catch (e: Exception) {
-                            Log.i("Pool", "Имя потока: $threadName, название категории: ${category.title}, Ошибка: $e")
+                if (categories != null) {
+                    for (category in categories) {
+                        threadPool.execute {
+                            val threadName = Thread.currentThread().name
+                            try {
+                                val request = Request.Builder()
+                                    .url("https://recipes.androidsprint.ru/api/category/${category.id}/recipes").build()
+                                val response = okHttpClient.newCall(request).execute()
+                                val body = response.body?.string()
+                                val recipes = body?.let { json.decodeFromString<List<RecipeDto>>(it) }
+                                Log.i(
+                                    "Pool",
+                                    "Имя потока: $threadName, название категории: ${category.title}, количество рецептов: ${recipes?.size}"
+                                )
+                            } catch (e: Exception) {
+                                Log.i("Pool", "Имя потока: $threadName, название категории: ${category.title}, Ошибка: $e")
+                            }
                         }
                     }
                 }
-                Log.i("!!!", "Количество категорий: ${categories.size}")
+                Log.i("!!!", "Количество категорий: ${categories?.size}")
                 Log.i(
                     "!!!",
-                    "Названия категорий: ${categories.joinToString { category -> category.title }}"
+                    "Названия категорий: ${categories?.joinToString { category -> category.title }}"
                 )
                 Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
             } catch (e: Exception) {

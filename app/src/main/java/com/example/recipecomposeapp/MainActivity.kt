@@ -1,10 +1,8 @@
 package com.example.recipecomposeapp
 
-import android.R.attr.category
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.util.Log.e
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import com.example.recipecomposeapp.core.network.NetworkConfig
 import com.example.recipecomposeapp.core.network.api.RecipeApiService
-import com.example.recipecomposeapp.data.model.RecipeDto
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -23,18 +20,13 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.concurrent.thread
-
 
 class MainActivity : ComponentActivity() {
 
-    private val okHttpClient = OkHttpClient()
     private var deepLink by mutableStateOf<Intent?>(null)
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
     val json = Json { ignoreUnknownKeys = true }
     val contentType = "application/json".toMediaType()
 
@@ -96,10 +88,5 @@ class MainActivity : ComponentActivity() {
             deepLink = intent
         }
         setIntent(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        threadPool.shutdown()
     }
 }

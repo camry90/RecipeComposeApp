@@ -9,59 +9,59 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.recipecomposeapp.data.model.CategoryDto
-import com.example.recipecomposeapp.data.model.RecipeDto
+import androidx.lifecycle.lifecycleScope
+import com.example.recipecomposeapp.core.network.NetworkConfig
+import com.example.recipecomposeapp.core.network.api.RecipeApiService
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
+import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
 
-    private val okHttpClient = OkHttpClient()
     private var deepLink by mutableStateOf<Intent?>(null)
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
     val json = Json { ignoreUnknownKeys = true }
+    val contentType = "application/json".toMediaType()
+
+    val retrofit = Retrofit.Builder()
+        .baseUrl(NetworkConfig.BASE_URL)
+        .addConverterFactory(json.asConverterFactory(contentType))
+        .build()
+
+    val apiService: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        thread {
+
+        lifecycleScope.launch {
             try {
-                val request = Request.Builder()
-                    .url("https://recipes.androidsprint.ru/api/category")
-                    .build()
+                val categories = apiService.getCategories()
 
-                val response = okHttpClient.newCall(request).execute()
-                val body = response.body?.string()
-                val categories = body?.let { json.decodeFromString<List<CategoryDto>>(it) }
-
-                if (categories != null) {
-                    for (category in categories) {
-                        threadPool.execute {
-                            val threadName = Thread.currentThread().name
+                coroutineScope {
+                    categories.map { category ->
+                        async {
                             try {
-                                val request = Request.Builder()
-                                    .url("https://recipes.androidsprint.ru/api/category/${category.id}/recipes").build()
-                                val response = okHttpClient.newCall(request).execute()
-                                val body = response.body?.string()
-                                val recipes = body?.let { json.decodeFromString<List<RecipeDto>>(it) }
-                                Log.i(
-                                    "Pool",
-                                    "Имя потока: $threadName, название категории: ${category.title}, количество рецептов: ${recipes?.size}"
-                                )
+                                val recipes = apiService.getRecipesByCategory(category.id)
+                                Log.i("Recipe", "название категории: ${category.title}, количество рецептов: ${recipes.size}")
                             } catch (e: Exception) {
-                                Log.i("Pool", "Имя потока: $threadName, название категории: ${category.title}, Ошибка: $e")
+                                Log.i("Recipe", "название категории: ${category.title}, Ошибка: $e")
                             }
                         }
-                    }
+                    }.awaitAll()
                 }
-                Log.i("!!!", "Количество категорий: ${categories?.size}")
+
+                Log.i("!!!", "Количество категорий: ${categories.size}")
                 Log.i(
                     "!!!",
-                    "Названия категорий: ${categories?.joinToString { category -> category.title }}"
+                    "Названия категорий: ${categories.joinToString { category -> category.title }}"
                 )
                 Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
             } catch (e: Exception) {
@@ -88,10 +88,5 @@ class MainActivity : ComponentActivity() {
             deepLink = intent
         }
         setIntent(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        threadPool.shutdown()
     }
 }

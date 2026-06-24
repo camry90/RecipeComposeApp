@@ -10,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.rememberNavController
+import com.example.recipecomposeapp.core.navigation.AppNavHost
 import com.example.recipecomposeapp.core.network.NetworkConfig
 import com.example.recipecomposeapp.core.network.api.RecipeApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -19,23 +21,13 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class MainActivity : ComponentActivity() {
 
     private var deepLink by mutableStateOf<Intent?>(null)
     val json = Json { ignoreUnknownKeys = true }
-    val contentType = "application/json".toMediaType()
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(NetworkConfig.BASE_URL)
-        .addConverterFactory(json.asConverterFactory(contentType))
-        .build()
-
-    val apiService: RecipeApiService = retrofit.create(RecipeApiService::class.java)
+    val apiService = NetworkConfig.apiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +42,10 @@ class MainActivity : ComponentActivity() {
                         async {
                             try {
                                 val recipes = apiService.getRecipesByCategory(category.id)
-                                Log.i("Recipe", "название категории: ${category.title}, количество рецептов: ${recipes.size}")
+                                Log.i(
+                                    "Recipe",
+                                    "название категории: ${category.title}, количество рецептов: ${recipes.size}"
+                                )
                             } catch (e: Exception) {
                                 Log.i("Recipe", "название категории: ${category.title}, Ошибка: $e")
                             }

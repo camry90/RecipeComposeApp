@@ -107,14 +107,20 @@ fun AppNavHost(
         ) { backStackEntry ->
             val context = LocalContext.current
             val savedStateHandle = backStackEntry.savedStateHandle
-            val viewModel = remember(backStackEntry){ RecipeDetailsViewModel(
-                application = context.applicationContext as Application,
-                repository = repository,
-                savedStateHandle = savedStateHandle
-            ) }
-            RecipeDetailsScreen(
-                viewModel = viewModel
-            )
+            val viewModel = remember(backStackEntry){
+                (context.applicationContext as? Application)?.let {
+                    RecipeDetailsViewModel(
+                        application = it,
+                        repository = repository,
+                        savedStateHandle = savedStateHandle
+                    )
+                }
+            }
+            if (viewModel != null) {
+                RecipeDetailsScreen(
+                    viewModel = viewModel
+                )
+            }
         }
 
         composable(route = Screen.Favorites.route) {

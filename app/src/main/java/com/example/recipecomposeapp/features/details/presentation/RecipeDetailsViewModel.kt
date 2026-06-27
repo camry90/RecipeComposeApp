@@ -3,12 +3,7 @@ package com.example.recipecomposeapp.features.details.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
 import com.example.recipecomposeapp.data.repository.RecipesRepository
@@ -21,25 +16,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecipeDetailsViewModel(
-    private val repository: RecipesRepository = RecipesRepository(),
-    private val savedStateHandle: SavedStateHandle,
     application: Application,
+    private val repository: RecipesRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : AndroidViewModel(application) {
 
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[APPLICATION_KEY] as Application
-                val savedStateHandle = createSavedStateHandle()
-
-                RecipeDetailsViewModel(
-                    application = application,
-                    savedStateHandle = savedStateHandle
-                )
-            }
-        }
-    }
     private val favoriteManager = FavoriteDataStoreManager(application)
     private val _uiState = MutableStateFlow(RecipeDetailsUiState())
     val uiState: StateFlow<RecipeDetailsUiState> = _uiState.asStateFlow()
@@ -56,16 +38,14 @@ class RecipeDetailsViewModel(
             observationFavoriteStatus(recipeId)
 
             try {
-                val recipe = repository.getRecipeById(recipeId)
-                    ?.toUiModel()
-                if (recipe != null) {
-                    _uiState.update { currentRecipe ->
-                        currentRecipe.copy(
-                            recipe = recipe,
-                            isLoading = false,
-                            scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
-                        )
-                    }
+                val recipe = repository.getRecipe(recipeId)
+                    .toUiModel()
+                _uiState.update { currentRecipe ->
+                    currentRecipe.copy(
+                        recipe = recipe,
+                        isLoading = false,
+                        scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
+                    )
                 }
             } catch (e: Exception) {
                 _uiState.update { currentRecipe ->
@@ -75,6 +55,7 @@ class RecipeDetailsViewModel(
         }
 
     }
+
 //    fun initializeRecipe(recipeId: Int) {
 //        viewModelScope.launch {
 //            _uiState.update { it.copy(isLoading = true) }

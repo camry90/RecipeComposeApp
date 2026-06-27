@@ -12,23 +12,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipecomposeapp.R
-import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
 import com.example.recipecomposeapp.core.ui.ScreenHeader
-import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.example.recipecomposeapp.features.recipes.ui.RecipeItem
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
-import kotlinx.coroutines.flow.map
-import kotlin.collections.emptyList
 
 @Composable
 fun FavoritesScreen(

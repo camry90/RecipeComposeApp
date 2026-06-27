@@ -11,27 +11,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipecomposeapp.CATEGORIES_COLUMNS
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.categories.presentation.CategoriesViewModel
-import com.example.recipecomposeapp.features.categories.presentation.model.CategoryUiState
-import com.example.recipecomposeapp.features.categories.presentation.model.toUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun CategoriesScreen(
+    repository: RecipesRepository,
     modifier: Modifier = Modifier,
     onCategoryClick: (Int, String, String) -> Unit
 ) {
-    val viewModel: CategoriesViewModel = viewModel()
+    val viewModel = remember { CategoriesViewModel(repository) }
     val uiState by viewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         ScreenHeader(

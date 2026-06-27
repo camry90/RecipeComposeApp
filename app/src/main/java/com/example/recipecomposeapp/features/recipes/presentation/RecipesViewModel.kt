@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecipesViewModel(
-    private val repository: RecipesRepository = RecipesRepository(),
+    private val repository: RecipesRepository,
     private val saveStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -33,7 +33,7 @@ class RecipesViewModel(
             val categoryImageUrl = Uri.decode(saveStateHandle.get<String>("categoryImageUrl") ?: "")
 
             try {
-                val recipes = repository.getRecipesByCategoryId(categoryId)
+                val recipes = repository.getRecipesByCategory(categoryId)
                     .map { currentRecipe -> currentRecipe.toUiModel() }
 
                 _uiState.update { currentRecipes ->

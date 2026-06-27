@@ -4,7 +4,7 @@ import com.example.recipecomposeapp.data.model.CategoryDto
 import com.example.recipecomposeapp.data.model.IngredientDto
 import com.example.recipecomposeapp.data.model.RecipeDto
 
-class RecipesRepository() {
+class RecipesRepositoryStub() {
     private val categories = listOf(
         CategoryDto(id = 0, title = "Бургеры", description = "...", imageUrl = "burger.png"),
         CategoryDto(id = 1, title = "Десерты", description = "...", imageUrl = "dessert.png"),

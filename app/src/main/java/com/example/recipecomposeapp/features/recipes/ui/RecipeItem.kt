@@ -40,8 +40,8 @@ fun RecipeItem(
                 model = recipe.imageUrl,
                 contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.checker),
-                error = painterResource(R.drawable.checker),
+                placeholder = painterResource(R.drawable.img_placeholder),
+                error = painterResource(R.drawable.img_error),
                 modifier = Modifier.aspectRatio(2.5f)
             )
             Text(

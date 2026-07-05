@@ -56,34 +56,6 @@ class RecipeDetailsViewModel(
 
     }
 
-//    fun initializeRecipe(recipeId: Int) {
-//        viewModelScope.launch {
-//            _uiState.update { it.copy(isLoading = true) }
-//            currentRecipeId = recipeId
-//
-//            observationFavoriteStatus()
-//            try {
-//                val recipe = repository.getRecipeById(recipeId)
-//                    ?.toUiModel()
-//                if (recipe != null) {
-//                    _uiState.update { currentRecipe ->
-//                        currentRecipe.copy(
-//                            recipe = recipe,
-//                            isLoading = false
-//                        )
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                _uiState.update {
-//                    it.copy(
-//                        error = "Ошибка загрузки страницы рецепта: ${e.message}",
-//                        isLoading = false
-//                    )
-//                }
-//            }
-//        }
-//    }
-
     private fun observationFavoriteStatus(recipeId: Int) {
         viewModelScope.launch {
             favoriteManager.isFavoriteFlow(recipeId).collect { isFavorite ->

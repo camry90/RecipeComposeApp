@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import com.example.recipecomposeapp.R
+import com.example.recipecomposeapp.core.ui.RecipeImage
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 
@@ -36,12 +37,10 @@ fun RecipeItem(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            AsyncImage(
-                model = recipe.imageUrl,
+            RecipeImage(
+                imageUrl = recipe.imageUrl,
                 contentDescription = recipe.title,
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.img_placeholder),
-                error = painterResource(R.drawable.img_error),
                 modifier = Modifier.aspectRatio(2.5f)
             )
             Text(

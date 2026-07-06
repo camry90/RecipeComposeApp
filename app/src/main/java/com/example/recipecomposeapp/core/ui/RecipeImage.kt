@@ -20,12 +20,16 @@ import com.example.recipecomposeapp.R
 fun RecipeImage(imageUrl: String, contentDescription: String, contentScale: ContentScale, modifier: Modifier = Modifier) {
     Box() {
         var isLoading by remember { mutableStateOf(true) }
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+        val context = LocalContext.current
+        val imageRequest = remember(imageUrl) {
+            ImageRequest.Builder(context)
                 .data(imageUrl)
                 .size(200, 200)
                 .crossfade(true)
-                .build(),
+                .build()
+        }
+        AsyncImage(
+            model = imageRequest,
             contentDescription = contentDescription,
             contentScale = contentScale,
             placeholder = painterResource(R.drawable.img_placeholder),

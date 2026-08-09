@@ -140,8 +140,8 @@ fun ScreenHeader(
             model = imagePainter,
             contentDescription = title,
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.checker),
-            error = painterResource(R.drawable.checker),
+            placeholder = painterResource(R.drawable.img_placeholder),
+            error = painterResource(R.drawable.img_error),
             modifier = Modifier.fillMaxSize()
         )
 

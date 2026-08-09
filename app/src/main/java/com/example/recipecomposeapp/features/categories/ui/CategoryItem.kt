@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.example.recipecomposeapp.DESCRIPTIONS_MAX_LINES
 import com.example.recipecomposeapp.R
+import com.example.recipecomposeapp.core.ui.RecipeImage
 import com.example.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 
@@ -33,12 +34,10 @@ fun CategoryItem(
         elevation = CardDefaults.cardElevation(Dimens.elevationCard),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
     ) {
-        AsyncImage(
-            model = category.imageUrl,
+        RecipeImage(
+            imageUrl = category.imageUrl,
             contentDescription = category.title,
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.checker),
-            error = painterResource(R.drawable.checker),
             modifier = Modifier.aspectRatio(1.2f)
         )
         Text(

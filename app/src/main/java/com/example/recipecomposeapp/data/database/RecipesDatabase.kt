@@ -1,9 +1,9 @@
 package com.example.recipecomposeapp.data.database
 
 import android.content.Context
-import androidx.room3.Database
-import androidx.room3.Room
-import androidx.room3.RoomDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.recipecomposeapp.data.database.dao.CategoryDao
 import com.example.recipecomposeapp.data.database.entity.CategoryEntity
 
@@ -17,8 +17,12 @@ abstract class RecipesDatabase : RoomDatabase() {
 
     companion object {
         fun buildDatabase(context: Context): RecipesDatabase {
-            return Room.databaseBuilder(context.applicationContext, RecipesDatabase::class.java, "recipes_database")
-                .fallbackToDestructiveMigration()
+            return Room.databaseBuilder(
+                context.applicationContext,
+                RecipesDatabase::class.java,
+                "recipes_database"
+            )
+                .fallbackToDestructiveMigration(false)
                 .build()
         }
     }

@@ -33,6 +33,6 @@ fun RecipeDto.toUiModel() = RecipeUiModel(
     title = title,
     ingredients = ingredients.map { it.toUiModel() },
     method = method,
-    imageUrl = if (imageUrl.startsWith("http")) imageUrl else Constants.IMAGE_BASE_URL + imageUrl,
+    imageUrl = if (imageUrl.startsWith("http")) imageUrl else Constants.IMAGES_BASE_URL + imageUrl,
     servings = servings
 )

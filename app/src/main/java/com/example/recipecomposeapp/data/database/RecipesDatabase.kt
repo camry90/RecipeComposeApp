@@ -22,7 +22,7 @@ abstract class RecipesDatabase : RoomDatabase() {
                 RecipesDatabase::class.java,
                 "recipes_database"
             )
-                .fallbackToDestructiveMigration(false)
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

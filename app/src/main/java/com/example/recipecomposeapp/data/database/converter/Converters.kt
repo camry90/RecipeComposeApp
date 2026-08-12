@@ -13,5 +13,5 @@ class Converters {
     }
 
     @TypeConverter
-    fun TypeConverter.fromList(list: List<String>): String = list.joinToString("|||")
+    fun fromList(list: List<String>): String = list.joinToString("|||")
 }

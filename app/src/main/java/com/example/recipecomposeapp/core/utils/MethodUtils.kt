@@ -5,5 +5,5 @@ fun methodToString(instructions: List<String>?): String {
 }
 
 fun methodToList(instructions: String): List<String> {
-    return instructions.split(",")
+    return instructions.split("\n")
 }

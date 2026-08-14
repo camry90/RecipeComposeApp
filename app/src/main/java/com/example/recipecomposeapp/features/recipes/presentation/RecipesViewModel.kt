@@ -38,7 +38,6 @@ class RecipesViewModel(
                     .map { currentRecipes -> currentRecipes.map { it.toUiModel() } }
                     .collect { currentRecipe ->
                         _uiState.update {
-                            it
                             it.copy(
                                 recipes = currentRecipe,
                                 categoryTitle = categoryTitle,

@@ -12,10 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipecomposeapp.Screen
 import com.example.recipecomposeapp.core.network.NetworkConfig
+import com.example.recipecomposeapp.data.database.RecipesDatabase
 import com.example.recipecomposeapp.data.repository.RecipesRepositoryImpl
 import com.example.recipecomposeapp.features.categories.ui.CategoriesScreen
 import com.example.recipecomposeapp.features.details.presentation.RecipeDetailsViewModel
 import com.example.recipecomposeapp.features.details.ui.RecipeDetailsScreen
+import com.example.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.example.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import com.example.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.example.recipecomposeapp.features.recipes.ui.RecipesScreen
@@ -27,9 +29,10 @@ fun AppNavHost(
     deepLinkIntent: Intent?,
     modifier: Modifier = Modifier
 ) {
-
+    val context = LocalContext.current
+    val database = RecipesDatabase.getDatabase(context)
     val apiService = NetworkConfig.apiService
-    val repository = remember { RecipesRepositoryImpl(apiService) }
+    val repository = remember { RecipesRepositoryImpl(apiService, database) }
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -89,10 +92,12 @@ fun AppNavHost(
             arguments = Screen.Recipes.arguments
         ) { backStackEntry ->
             val saveStateHandle = backStackEntry.savedStateHandle
-            val viewModel = remember(backStackEntry) { RecipesViewModel(
-                repository = repository,
-                saveStateHandle = saveStateHandle
-            ) }
+            val viewModel = remember(backStackEntry) {
+                RecipesViewModel(
+                    repository = repository,
+                    saveStateHandle = saveStateHandle
+                )
+            }
             RecipesScreen(
                 viewModel = viewModel,
                 onRecipeClick = { recipeId, recipe ->
@@ -105,9 +110,8 @@ fun AppNavHost(
             route = Screen.RecipeDetails.route,
             arguments = Screen.RecipeDetails.arguments
         ) { backStackEntry ->
-            val context = LocalContext.current
             val savedStateHandle = backStackEntry.savedStateHandle
-            val viewModel = remember(backStackEntry){
+            val viewModel = remember(backStackEntry) {
                 (context.applicationContext as? Application)?.let {
                     RecipeDetailsViewModel(
                         application = it,
@@ -123,12 +127,23 @@ fun AppNavHost(
             }
         }
 
-        composable(route = Screen.Favorites.route) {
-            FavoritesScreen(
-                onFavoriteClick = { recipeId, recipe ->
-                    navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
+        composable(route = Screen.Favorites.route) { backStackEntry ->
+            val viewModel = remember(backStackEntry) {
+                (context.applicationContext as? Application)?.let {
+                    FavoritesViewModel(
+                        application = it,
+                        repository = repository,
+                    )
                 }
-            )
+            }
+            if (viewModel != null) {
+                FavoritesScreen(
+                    onFavoriteClick = { recipeId, recipe ->
+                        navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
+                    },
+                    viewModel = viewModel
+                )
+            }
         }
     }
 }

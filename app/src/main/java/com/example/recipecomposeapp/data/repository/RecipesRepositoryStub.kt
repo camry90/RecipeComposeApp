@@ -79,9 +79,7 @@ class RecipesRepositoryStub() {
         )
     )
 
-    private val allRecipes = burgerRecipes   // Пока только burgerRecipes
-    // в дальшнейшем добавлю другие рецепты
-
+    private val allRecipes = burgerRecipes
 
     fun getCategories(): List<CategoryDto> {
         return categories

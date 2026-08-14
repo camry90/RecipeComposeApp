@@ -10,6 +10,7 @@ import com.example.recipecomposeapp.features.recipes.presentation.model.toUiMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -33,17 +34,19 @@ class RecipesViewModel(
             val categoryImageUrl = Uri.decode(saveStateHandle.get<String>("categoryImageUrl") ?: "")
 
             try {
-                val recipes = repository.getRecipesByCategory(categoryId)
-                    .map { currentRecipe -> currentRecipe.toUiModel() }
-
-                _uiState.update { currentRecipes ->
-                    currentRecipes.copy(
-                        recipes = recipes,
-                        categoryTitle = categoryTitle,
-                        categoryImageUrl = categoryImageUrl,
-                        isLoading = false
-                    )
-                }
+                repository.getRecipesByCategory(categoryId)
+                    .map { currentRecipes -> currentRecipes.map { it.toUiModel() } }
+                    .collect { currentRecipe ->
+                        _uiState.update {
+                            it
+                            it.copy(
+                                recipes = currentRecipe,
+                                categoryTitle = categoryTitle,
+                                categoryImageUrl = categoryImageUrl,
+                                isLoading = false
+                            )
+                        }
+                    }
             } catch (e: Exception) {
                 _uiState.update { currentRecipes ->
                     currentRecipes.copy(

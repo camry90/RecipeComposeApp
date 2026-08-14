@@ -4,22 +4,22 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
-import com.example.recipecomposeapp.data.repository.RecipesRepositoryStub
+import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
     application: Application,
+    val repository: RecipesRepository,
 ) : AndroidViewModel(application) {
     private val favoriteManager = FavoriteDataStoreManager(application)
-    private val repository: RecipesRepositoryStub = RecipesRepositoryStub()
-
     private val _uiState = MutableStateFlow(FavoritesUiState())
     val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
@@ -31,9 +31,12 @@ class FavoritesViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                favoriteManager.getFavoriteIdsFlow().map { ids ->
-                    ids.mapNotNull { id -> id.toIntOrNull()?.let { repository.getRecipeById(it) } }.map { recipe -> recipe.toUiModel() }
-                }.collect { recipes -> _uiState.update { it.copy(favoriteRecipes = recipes, isLoading = false) } }
+                favoriteManager.getFavoriteIdsFlow()
+                    .flatMapLatest { ids -> repository.getRecipesByIds(ids.mapNotNull { id -> id.toIntOrNull() }) }
+                    .map { recipesDto -> recipesDto.map { recipeDto -> recipeDto.toUiModel() } }
+                    .collect { recipes ->
+                        _uiState.update { it.copy(favoriteRecipes = recipes, isLoading = false) }
+                    }
             } catch (e: Exception) {
                 _uiState.update { currentRecipe ->
                     currentRecipe.copy(

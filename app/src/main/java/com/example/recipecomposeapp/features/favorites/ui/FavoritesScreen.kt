@@ -15,21 +15,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.recipecomposeapp.R
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
-import com.example.recipecomposeapp.features.recipes.ui.RecipeItem
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
+import com.example.recipecomposeapp.features.recipes.ui.RecipeItem
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
 fun FavoritesScreen(
     onFavoriteClick: (Int, RecipeUiModel) -> Unit,
+    viewModel: FavoritesViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: FavoritesViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
 

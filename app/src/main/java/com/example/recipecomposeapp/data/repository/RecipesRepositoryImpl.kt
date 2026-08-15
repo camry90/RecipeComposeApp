@@ -66,8 +66,8 @@ class RecipesRepositoryImpl(
         }
     }
 
-    override suspend fun getRecipe(recipeId: Int): RecipeDto {
-        return withContext(Dispatchers.IO) {
+    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 apiService.getRecipe(recipeId)
             } catch (e: Exception) {
@@ -78,5 +78,8 @@ class RecipesRepositoryImpl(
                 throw e
             }
         }
+
+        return recipeDao.getRecipeById(recipeId)
+            .map { entity -> entity?.toDto() }
     }
 }

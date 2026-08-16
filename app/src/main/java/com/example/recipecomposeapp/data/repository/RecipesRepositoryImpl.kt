@@ -75,7 +75,6 @@ class RecipesRepositoryImpl(
                     "RecipesRepositoryImpl",
                     "Ошибка загрузки рецепта по id: $recipeId по ошибке ${e.message}"
                 )
-                throw e
             }
         }
 

@@ -8,6 +8,7 @@ import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
 import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
+import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,22 +35,26 @@ class RecipeDetailsViewModel(
             _uiState.update { it.copy(isLoading = true) }
             val recipeFlow = repository.getRecipe(recipeId)
             recipeFlow.map { it?.toUiModel() }.collect { recipe ->
-                if (recipe != null) {
-                    _uiState.update { currentRecipe ->
-                        currentRecipe.copy(
-                            recipe = recipe,
-                            isLoading = false,
-                            scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
-                        )
-                    }
-                } else {
-                    _uiState.update { currentRecipe ->
-                        currentRecipe.copy(
-                            recipe = null,
-                            isLoading = true,
-                        )
-                    }
-                }
+                loadRecipe(recipe)
+            }
+        }
+    }
+
+    private fun loadRecipe(recipe: RecipeUiModel?) {
+        if (recipe != null) {
+            _uiState.update { currentRecipe ->
+                currentRecipe.copy(
+                    recipe = recipe,
+                    isLoading = false,
+                    scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
+                )
+            }
+        } else {
+            _uiState.update { currentRecipe ->
+                currentRecipe.copy(
+                    recipe = null,
+                    isLoading = true,
+                )
             }
         }
     }

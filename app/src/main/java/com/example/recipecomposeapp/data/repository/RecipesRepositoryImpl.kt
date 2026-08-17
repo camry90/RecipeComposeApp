@@ -11,6 +11,7 @@ import com.example.recipecomposeapp.data.model.toEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -69,7 +70,16 @@ class RecipesRepositoryImpl(
     override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                apiService.getRecipe(recipeId)
+                val fresh = apiService.getRecipe(recipeId)
+                val existing = recipeDao.getRecipeById(recipeId).first()
+                if (existing != null) {
+                    recipeDao.insertRecipes(listOf(fresh.toEntity(existing.categoryId)))
+                } else {
+                    Log.d(
+                        "RecipesRepositoryImpl",
+                        "Рецепт $recipeId не найден в кеше, синхронизация пропущена"
+                    )
+                }
             } catch (e: Exception) {
                 Log.e(
                     "RecipesRepositoryImpl",

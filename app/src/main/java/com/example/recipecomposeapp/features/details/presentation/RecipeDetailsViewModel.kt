@@ -35,26 +35,22 @@ class RecipeDetailsViewModel(
             _uiState.update { it.copy(isLoading = true) }
             val recipeFlow = repository.getRecipe(recipeId)
             recipeFlow.map { it?.toUiModel() }.collect { recipe ->
-                loadRecipe(recipe)
-            }
-        }
-    }
-
-    private fun loadRecipe(recipe: RecipeUiModel?) {
-        if (recipe != null) {
-            _uiState.update { currentRecipe ->
-                currentRecipe.copy(
-                    recipe = recipe,
-                    isLoading = false,
-                    scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
-                )
-            }
-        } else {
-            _uiState.update { currentRecipe ->
-                currentRecipe.copy(
-                    recipe = null,
-                    isLoading = true,
-                )
+                if (recipe != null) {
+                    _uiState.update { currentRecipe ->
+                        currentRecipe.copy(
+                            recipe = recipe,
+                            isLoading = false,
+                            scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
+                        )
+                    }
+                } else {
+                    _uiState.update { currentRecipe ->
+                        currentRecipe.copy(
+                            recipe = null,
+                            isLoading = true,
+                        )
+                    }
+                }
             }
         }
     }

@@ -8,10 +8,12 @@ import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
 import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
+import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -28,32 +30,29 @@ class RecipeDetailsViewModel(
 
     init {
         val recipeId = savedStateHandle.get<Int>(Constants.KEY_RECIPE_OBJECT) ?: 0
-        loadRecipe(recipeId)
-    }
-
-
-    private fun loadRecipe(recipeId: Int) {
+        observationFavoriteStatus(recipeId)
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            observationFavoriteStatus(recipeId)
-
-            try {
-                val recipe = repository.getRecipe(recipeId)
-                    .toUiModel()
-                _uiState.update { currentRecipe ->
-                    currentRecipe.copy(
-                        recipe = recipe,
-                        isLoading = false,
-                        scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
-                    )
-                }
-            } catch (e: Exception) {
-                _uiState.update { currentRecipe ->
-                    currentRecipe.copy(error = "Ошибка загрузки страницы рецепта: ${e.message}", isLoading = false)
+            val recipeFlow = repository.getRecipe(recipeId)
+            recipeFlow.map { it?.toUiModel() }.collect { recipe ->
+                if (recipe != null) {
+                    _uiState.update { currentRecipe ->
+                        currentRecipe.copy(
+                            recipe = recipe,
+                            isLoading = false,
+                            scaledIngredients = recipe.scaledIngredients(currentRecipe.currentPortions.toDouble())
+                        )
+                    }
+                } else {
+                    _uiState.update { currentRecipe ->
+                        currentRecipe.copy(
+                            recipe = null,
+                            isLoading = true,
+                        )
+                    }
                 }
             }
         }
-
     }
 
     private fun observationFavoriteStatus(recipeId: Int) {

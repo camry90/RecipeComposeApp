@@ -72,12 +72,3 @@ fun RecipesScreen(
         }
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun RecipesScreenPreview() {
-    RecipeComposeAppTheme {
-//        RecipesScreen()
-    }
-}

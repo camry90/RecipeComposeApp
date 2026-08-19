@@ -41,7 +41,7 @@ fun AppNavHost(
         deepLinkIntent?.data?.let { uri ->
 
             val recipeId: Int? = when (uri.scheme) {
-                "   recipeapp" -> {
+                "recipeapp" -> {
                     if (uri.host == "recipe") {
                         uri.pathSegments[0].toIntOrNull()
                     } else {
@@ -94,10 +94,11 @@ fun AppNavHost(
             arguments = Screen.Recipes.arguments
         ) { backStackEntry ->
 
-
-            val savedStateHandle = SavedStateHandle().apply {
-                backStackEntry.arguments?.let { bundle ->
-                    bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+            val savedStateHandle = remember(backStackEntry) {
+                SavedStateHandle().apply {
+                    backStackEntry.arguments?.let { bundle ->
+                        bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                    }
                 }
             }
             val viewModel = remember {
@@ -121,9 +122,11 @@ fun AppNavHost(
             val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
             val context = LocalContext.current
 
-            val savedStateHandle = SavedStateHandle().apply {
-                backStackEntry.arguments?.let { bundle ->
-                    bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+            val savedStateHandle = remember(backStackEntry) {
+                SavedStateHandle().apply {
+                    backStackEntry.arguments?.let { bundle ->
+                        bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
+                    }
                 }
             }
             val viewModel = remember {

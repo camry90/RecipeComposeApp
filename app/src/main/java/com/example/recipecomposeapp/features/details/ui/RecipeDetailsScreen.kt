@@ -26,7 +26,6 @@ fun RecipeDetailsScreen(
     viewModel: RecipeDetailsViewModel
 ) {
     val context = LocalContext.current
-
     val uiState by viewModel.uiState.collectAsState()
     val portionsText = pluralStringResource(
         R.plurals.portions_count,

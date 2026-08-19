@@ -1,9 +1,7 @@
-package com.example.recipecomposeapp.core.network
+package com.example.recipecomposeapp.data.network
 
-import android.os.Build
-import androidx.core.os.BuildCompat
 import com.example.recipecomposeapp.BuildConfig
-import com.example.recipecomposeapp.core.network.api.RecipeApiService
+import com.example.recipecomposeapp.data.network.api.RecipeApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -36,7 +34,7 @@ object NetworkConfig {
 
 
     val retrofit = Retrofit.Builder()
-        .baseUrl(NetworkConfig.BASE_URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(json.asConverterFactory(contentType))
         .client(okHttpClient)
         .build()

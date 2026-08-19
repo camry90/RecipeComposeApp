@@ -2,7 +2,7 @@ package com.example.recipecomposeapp.data.repository
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.example.recipecomposeapp.core.network.api.RecipeApiService
+import com.example.recipecomposeapp.data.network.api.RecipeApiService
 import com.example.recipecomposeapp.data.database.RecipesDatabase
 import com.example.recipecomposeapp.data.model.CategoryDto
 import com.example.recipecomposeapp.data.model.RecipeDto
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RecipesRepositoryImpl(
     private val apiService: RecipeApiService,

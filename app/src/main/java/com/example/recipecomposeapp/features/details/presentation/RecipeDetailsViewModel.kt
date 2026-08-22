@@ -3,6 +3,7 @@ package com.example.recipecomposeapp.features.details.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
@@ -10,21 +11,22 @@ import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecipeDetailsViewModel(
-    application: Application,
+@HiltViewModel
+class RecipeDetailsViewModel @Inject constructor(
     private val repository: RecipesRepository,
     private val savedStateHandle: SavedStateHandle,
-) : AndroidViewModel(application) {
+    private val favoriteManager: FavoriteDataStoreManager
+) : ViewModel() {
 
-
-    private val favoriteManager = FavoriteDataStoreManager(application)
     private val _uiState = MutableStateFlow(RecipeDetailsUiState())
     val uiState: StateFlow<RecipeDetailsUiState> = _uiState.asStateFlow()
 

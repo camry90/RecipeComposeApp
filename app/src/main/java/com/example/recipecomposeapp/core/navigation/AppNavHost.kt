@@ -7,15 +7,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.recipecomposeapp.Screen
-import com.example.recipecomposeapp.app.di.FavoritesViewModelFactory
 import com.example.recipecomposeapp.app.di.RecipeApplication
-import com.example.recipecomposeapp.app.di.RecipeDetailsViewModelFactory
-import com.example.recipecomposeapp.app.di.RecipesViewModelFactory
 import com.example.recipecomposeapp.data.network.NetworkConfig
 import com.example.recipecomposeapp.data.database.RecipesDatabase
 import com.example.recipecomposeapp.data.repository.RecipesRepositoryImpl
@@ -34,9 +32,6 @@ fun AppNavHost(
     deepLinkIntent: Intent?,
     modifier: Modifier = Modifier
 ) {
-    val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
-    val context = LocalContext.current
-
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
 
@@ -92,21 +87,8 @@ fun AppNavHost(
         composable(
             route = Screen.Recipes.route,
             arguments = Screen.Recipes.arguments
-        ) { backStackEntry ->
-
-            val savedStateHandle = remember(backStackEntry) {
-                SavedStateHandle().apply {
-                    backStackEntry.arguments?.let { bundle ->
-                        bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
-                    }
-                }
-            }
-            val viewModel = remember {
-                RecipesViewModelFactory(
-                    savedStateHandle,
-                    appContainer.recipesRepository
-                ).create()
-            }
+        ) {
+            val viewModel: RecipesViewModel = hiltViewModel()
             RecipesScreen(
                 viewModel = viewModel,
                 onRecipeClick = { recipeId, recipe ->
@@ -118,28 +100,11 @@ fun AppNavHost(
         composable(
             route = Screen.RecipeDetails.route,
             arguments = Screen.RecipeDetails.arguments
-        ) { backStackEntry ->
-            val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
-            val context = LocalContext.current
-
-            val savedStateHandle = remember(backStackEntry) {
-                SavedStateHandle().apply {
-                    backStackEntry.arguments?.let { bundle ->
-                        bundle.keySet().forEach { key -> set(key, bundle.get(key)) }
-                    }
-                }
-            }
-            val viewModel = remember {
-                RecipeDetailsViewModelFactory(
-                    application = context.applicationContext as Application,
-                    savedStateHandle = savedStateHandle,
-                    repository = appContainer.recipesRepository
-                ).create()
-            }
+        ) {
+            val viewModel: RecipeDetailsViewModel = hiltViewModel()
             RecipeDetailsScreen(
                 viewModel = viewModel
             )
-
         }
 
         composable(route = Screen.Favorites.route) {
@@ -148,7 +113,6 @@ fun AppNavHost(
                     navController.navigate(Screen.RecipeDetails.createRoute(recipeId))
                 },
             )
-
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.recipecomposeapp.features.favorites.ui
 
-import android.app.Application
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,34 +12,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipecomposeapp.R
-import com.example.recipecomposeapp.app.di.FavoritesViewModelFactory
-import com.example.recipecomposeapp.app.di.RecipeApplication
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.features.favorites.presentation.FavoritesViewModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.ui.RecipeItem
 import com.example.recipecomposeapp.ui.theme.Dimens
-import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
 fun FavoritesScreen(
     onFavoriteClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val appContainer = (context.applicationContext as RecipeApplication).appContainer
-    val viewModel = remember {
-        FavoritesViewModelFactory(
-            application = context.applicationContext as Application,
-            repository = appContainer.recipesRepository
-        ).create()
-    }
+    val viewModel: FavoritesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier) {

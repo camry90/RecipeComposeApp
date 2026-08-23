@@ -8,15 +8,18 @@ import com.example.recipecomposeapp.data.model.CategoryDto
 import com.example.recipecomposeapp.data.model.RecipeDto
 import com.example.recipecomposeapp.data.model.toDto
 import com.example.recipecomposeapp.data.model.toEntity
+import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
-class RecipesRepositoryImpl(
+class RecipesRepositoryImpl @Inject constructor(
     private val apiService: RecipeApiService,
     private val database: RecipesDatabase,
 ) : RecipesRepository {
@@ -66,28 +69,35 @@ class RecipesRepositoryImpl(
         }
     }
 
-    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val fresh = apiService.getRecipe(recipeId)
-                val existing = recipeDao.getRecipeById(recipeId).first()
-                if (existing != null) {
-                    recipeDao.insertRecipes(listOf(fresh.toEntity(existing.categoryId)))
-                } else {
-                    Log.d(
-                        "RecipesRepositoryImpl",
-                        "Рецепт $recipeId не найден в кеше, синхронизация пропущена"
-                    )
-                }
-            } catch (e: Exception) {
-                Log.e(
-                    "RecipesRepositoryImpl",
-                    "Ошибка загрузки рецепта по id: $recipeId по ошибке ${e.message}"
-                )
-            }
+    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> = flow {
+        val cached = recipeDao.getRecipeById(recipeId).first()
+
+        cached?.let {
+            emit(it.toDto())
         }
 
-        return recipeDao.getRecipeById(recipeId)
-            .map { entity -> entity?.toDto() }
+        try {
+            val fresh = apiService.getRecipe(recipeId)
+
+            cached?.let {
+                recipeDao.insertRecipes(
+                    listOf(fresh.toEntity(it.categoryId))
+                )
+            }
+
+            emit(fresh)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(
+                "RecipesRepositoryImpl",
+                "Ошибка загрузки рецепта по id: $recipeId",
+                e
+            )
+
+            if (cached == null) {
+                emit(null)
+            }
+        }
     }
 }

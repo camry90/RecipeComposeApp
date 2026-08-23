@@ -11,17 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipecomposeapp.CATEGORIES_COLUMNS
 import com.example.recipecomposeapp.R
-import com.example.recipecomposeapp.app.di.CategoriesViewModelFactory
-import com.example.recipecomposeapp.app.di.RecipeApplication
 import com.example.recipecomposeapp.core.ui.ScreenHeader
-import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.categories.presentation.CategoriesViewModel
 import com.example.recipecomposeapp.ui.theme.Dimens
 import com.example.recipecomposeapp.ui.theme.RecipeComposeAppTheme
@@ -31,11 +27,7 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier,
     onCategoryClick: (Int, String, String) -> Unit
 ) {
-
-    val appContainer = (LocalContext.current.applicationContext as RecipeApplication).appContainer
-    val viewModel = remember {
-        CategoriesViewModelFactory(appContainer.recipesRepository).create()
-    }
+    val viewModel: CategoriesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         ScreenHeader(

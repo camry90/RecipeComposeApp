@@ -72,20 +72,20 @@ class RecipesRepositoryImpl @Inject constructor(
     override fun getRecipe(recipeId: Int): Flow<RecipeDto?> = flow {
         val cached = recipeDao.getRecipeById(recipeId).first()
 
-        if (cached != null) {
-            emit(cached.toDto())
+        cached?.let {
+            emit(it.toDto())
         }
 
         try {
             val fresh = apiService.getRecipe(recipeId)
 
-            if (cached != null) {
+            cached?.let {
                 recipeDao.insertRecipes(
-                    listOf(fresh.toEntity(cached.categoryId))
+                    listOf(fresh.toEntity(it.categoryId))
                 )
-            } else {
-                emit(fresh)
             }
+
+            emit(fresh)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -94,6 +94,10 @@ class RecipesRepositoryImpl @Inject constructor(
                 "Ошибка загрузки рецепта по id: $recipeId",
                 e
             )
+
+            if (cached == null) {
+                emit(null)
+            }
         }
     }
 }

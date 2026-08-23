@@ -37,7 +37,7 @@ fun AppNavHost(
 
             val recipeId: Int? = when (uri.scheme) {
                 "recipeapp" -> {
-                    if (uri.host == "recipe") {
+                    if (uri.host == "recipe" && uri.pathSegments.isNotEmpty()) {
                         uri.pathSegments[0].toIntOrNull()
                     } else {
                         null
@@ -45,7 +45,7 @@ fun AppNavHost(
                 }
 
                 "https", "http" -> {
-                    if (uri.host == "recipes.androidsprint.ru") {
+                    if (uri.host == "recipes.androidsprint.ru" && uri.pathSegments.size >= 2) {
                         uri.pathSegments[1].toIntOrNull()
                     } else {
                         null

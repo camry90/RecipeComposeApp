@@ -13,9 +13,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class RecipesRepositoryImpl @Inject constructor(
     private val apiService: RecipeApiService,
@@ -67,18 +69,31 @@ class RecipesRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                apiService.getRecipe(recipeId)
-            } catch (e: Exception) {
-                Log.e(
-                    "RecipesRepositoryImpl",
-                    "Ошибка загрузки рецепта по id: $recipeId по ошибке ${e.message}"
-                )
-            }
+    override fun getRecipe(recipeId: Int): Flow<RecipeDto?> = flow {
+        val cached = recipeDao.getRecipeById(recipeId).first()
+
+        if (cached != null) {
+            emit(cached.toDto())
         }
-        return recipeDao.getRecipeById(recipeId)
-            .map { entity -> entity?.toDto() }
+
+        try {
+            val fresh = apiService.getRecipe(recipeId)
+
+            if (cached != null) {
+                recipeDao.insertRecipes(
+                    listOf(fresh.toEntity(cached.categoryId))
+                )
+            } else {
+                emit(fresh)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(
+                "RecipesRepositoryImpl",
+                "Ошибка загрузки рецепта по id: $recipeId",
+                e
+            )
+        }
     }
 }

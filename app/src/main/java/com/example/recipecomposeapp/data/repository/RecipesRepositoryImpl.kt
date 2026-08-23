@@ -70,16 +70,7 @@ class RecipesRepositoryImpl @Inject constructor(
     override fun getRecipe(recipeId: Int): Flow<RecipeDto?> {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val fresh = apiService.getRecipe(recipeId)
-                val existing = recipeDao.getRecipeById(recipeId).first()
-                if (existing != null) {
-                    recipeDao.insertRecipes(listOf(fresh.toEntity(existing.categoryId)))
-                } else {
-                    Log.d(
-                        "RecipesRepositoryImpl",
-                        "Рецепт $recipeId не найден в кеше, синхронизация пропущена"
-                    )
-                }
+                apiService.getRecipe(recipeId)
             } catch (e: Exception) {
                 Log.e(
                     "RecipesRepositoryImpl",
@@ -87,7 +78,6 @@ class RecipesRepositoryImpl @Inject constructor(
                 )
             }
         }
-
         return recipeDao.getRecipeById(recipeId)
             .map { entity -> entity?.toDto() }
     }

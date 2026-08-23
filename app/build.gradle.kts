@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.ksp)
+    alias(libs.plugins.hilt)
     id("kotlin-parcelize")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -74,7 +74,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("com.squareup.okhttp3:logging-interceptor:5.4.0")
-    implementation("com.google.dagger:hilt-android:2.59.2")
-    ksp("com.google.dagger:hilt-android-compiler:2.59.2")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

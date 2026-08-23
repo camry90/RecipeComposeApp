@@ -1,7 +1,5 @@
 package com.example.recipecomposeapp.features.details.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +7,6 @@ import com.example.recipecomposeapp.Constants
 import com.example.recipecomposeapp.core.data.FavoriteDataStoreManager
 import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.details.presentation.model.RecipeDetailsUiState
-import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +46,7 @@ class RecipeDetailsViewModel @Inject constructor(
                     _uiState.update { currentRecipe ->
                         currentRecipe.copy(
                             recipe = null,
-                            isLoading = true,
+                            isLoading = false,
                         )
                     }
                 }

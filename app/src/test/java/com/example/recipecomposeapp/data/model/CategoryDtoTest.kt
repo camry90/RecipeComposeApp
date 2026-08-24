@@ -8,14 +8,9 @@ import org.junit.Test
 class CategoryDtoTest {
     @Test
     fun `converts DTO to UI model`() {
-        val dto = CategoryDto(
-            id = 1,
-            title = "Завтраки",
-            description = "Утренние блюда",
-            imageUrl = "breakfast.jpg"
-        )
+        val dto = CategoryTestFixtures.createCategoryDto()
         val result = dto.toUiModel()
-        assertEquals("Завтраки", result.title)
+        assertEquals("Пасты", result.title)
     }
 
     @Test

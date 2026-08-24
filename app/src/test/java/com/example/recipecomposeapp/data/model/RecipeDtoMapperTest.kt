@@ -12,6 +12,7 @@ class RecipeDtoMapperTest {
         val dto = RecipeTestFixtures.createRecipeDto()
         val result = dto.toUiModel()
         assertEquals("Паста Карбонара", result.title)
+        assertEquals(1, result.id)
     }
 
     @Test

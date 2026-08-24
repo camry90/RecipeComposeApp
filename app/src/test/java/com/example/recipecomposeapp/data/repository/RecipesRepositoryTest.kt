@@ -1,6 +1,6 @@
 package com.example.recipecomposeapp.data.repository
 
-import androidx.datastore.core.IOException
+import java.io.IOException
 import app.cash.turbine.test
 import com.example.recipecomposeapp.data.database.RecipesDatabase
 import com.example.recipecomposeapp.data.database.dao.CategoryDao

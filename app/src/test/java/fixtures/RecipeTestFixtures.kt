@@ -26,7 +26,7 @@ object RecipeTestFixtures {
         title = title,
         ingredients = ingredients,
         method = method,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
     )
 
     fun createRecipeEntity(
@@ -47,4 +47,5 @@ object RecipeTestFixtures {
 
     fun createRecipeDtoList(count: Int = 3) =
         List(count) { index -> createRecipeDto(id = index + 1, title = "Рецепт ${index + 1}") }
+
 }

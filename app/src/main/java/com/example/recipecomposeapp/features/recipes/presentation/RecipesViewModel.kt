@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipecomposeapp.core.utils.UriDecoder
 import com.example.recipecomposeapp.data.repository.RecipesRepository
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
 import com.example.recipecomposeapp.features.recipes.presentation.model.toUiModel
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class RecipesViewModel @Inject constructor(
     private val repository: RecipesRepository,
     private val saveStateHandle: SavedStateHandle,
+    private val uriDecoder: UriDecoder,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecipesUiState())
@@ -33,8 +35,8 @@ class RecipesViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val categoryId = saveStateHandle.get<Int>("categoryId") ?: 0
-            val categoryTitle = Uri.decode(saveStateHandle.get<String>("categoryTitle") ?: "")
-            val categoryImageUrl = Uri.decode(saveStateHandle.get<String>("categoryImageUrl") ?: "")
+            val categoryTitle = uriDecoder.decode(saveStateHandle.get<String>("categoryTitle") ?: "")
+            val categoryImageUrl = uriDecoder.decode(saveStateHandle.get<String>("categoryImageUrl") ?: "")
 
             try {
                 repository.getRecipesByCategory(categoryId)

@@ -71,6 +71,7 @@ class RecipesViewModelTest {
             val state = awaitItem()
             assertEquals(1, state.recipes.size)
             assertFalse(state.isLoading)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -86,6 +87,7 @@ class RecipesViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertEquals("Завтраки", state.categoryTitle)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -97,6 +99,7 @@ class RecipesViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertNotNull(state.error)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

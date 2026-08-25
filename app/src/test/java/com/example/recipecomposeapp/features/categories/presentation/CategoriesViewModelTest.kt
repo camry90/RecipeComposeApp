@@ -57,6 +57,7 @@ class CategoriesViewModelTest {
             val state = awaitItem()
             assertFalse(state.isLoading)
             assertEquals(1, state.categories.size)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -69,6 +70,7 @@ class CategoriesViewModelTest {
             val state = awaitItem()
             assertTrue(state.categories.isEmpty())
             assertNull(state.error)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -80,6 +82,7 @@ class CategoriesViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertNotNull(state.error)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

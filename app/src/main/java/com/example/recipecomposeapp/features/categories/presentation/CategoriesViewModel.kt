@@ -25,7 +25,7 @@ class CategoriesViewModel @Inject constructor(
         loadCategories()
     }
 
-    private fun loadCategories() {
+    fun loadCategories() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {

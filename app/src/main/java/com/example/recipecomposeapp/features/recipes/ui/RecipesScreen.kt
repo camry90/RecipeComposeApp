@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipecomposeapp.core.ui.ScreenHeader
 import com.example.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
@@ -30,11 +29,11 @@ fun RecipesScreen(
     viewModel: RecipesViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    RecipeContent(uiState, onRecipeClick, modifier)
+    RecipesContent(uiState, onRecipeClick, modifier)
 }
 
 @Composable
-fun RecipeContent(
+fun RecipesContent(
     uiState: RecipesUiState,
     onRecipeClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier

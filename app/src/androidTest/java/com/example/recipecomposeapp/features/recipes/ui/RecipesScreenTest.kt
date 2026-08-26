@@ -4,13 +4,16 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.recipecomposeapp.features.details.presentation.model.IngredientUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import com.example.recipecomposeapp.features.recipes.presentation.model.RecipesUiState
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
-class RecipeContentTest {
+@RunWith(AndroidJUnit4::class)
+class RecipesScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -19,7 +22,7 @@ class RecipeContentTest {
     fun showsLoadingState() {
 
         composeTestRule.setContent {
-            RecipeContent(
+            RecipesContent(
                 uiState = RecipesUiState(
                     isLoading = true,
                 ),
@@ -33,7 +36,7 @@ class RecipeContentTest {
     @Test
     fun showsErrorState() {
         composeTestRule.setContent {
-            RecipeContent(
+            RecipesContent(
                 uiState = RecipesUiState(
                     error = "Network error"
                 ),
@@ -47,7 +50,7 @@ class RecipeContentTest {
     @Test
     fun showsEmptyState() {
         composeTestRule.setContent {
-            RecipeContent(
+            RecipesContent(
                 uiState = RecipesUiState(),
                 onRecipeClick = { _, _ -> }
             )
@@ -59,7 +62,7 @@ class RecipeContentTest {
     @Test
     fun displaysRecipeList() {
         composeTestRule.setContent {
-            RecipeContent(
+            RecipesContent(
                 uiState = RecipesUiState(
                     listOf(
                         RecipeUiModel(

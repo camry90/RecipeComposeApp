@@ -45,6 +45,7 @@ class RecipesScreenTest {
         }
 
         composeTestRule.onNodeWithTag("error_message").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Network error").assertIsDisplayed()
     }
 
     @Test

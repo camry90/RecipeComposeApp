@@ -44,17 +44,11 @@ fun RecipeItem(
                 modifier = Modifier.aspectRatio(2.5f)
             )
             Text(
-                text = recipe.title,
+                text = recipe.title.uppercase(),
                 modifier = Modifier.padding(Dimens.paddingSmall),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun RecipeItemPreview() {
-
 }

@@ -23,7 +23,7 @@ room = "2.8.4"
 ksp = "2.3.10"
 hilt = "2.59.2"
 hiltNavigationCompose = "1.2.0"
-mockk = "1.13.9"
+mockk = "1.14.11"
 coroutines-test = "1.7.3"
 turbine = "1.0.0"
 testRunner = "1.7.0"
@@ -69,6 +69,11 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "testRules" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttpBom" }
+room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

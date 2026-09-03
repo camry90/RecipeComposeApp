@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class RecipeDaoTest {
+class RecipesDaoTest {
 
     private lateinit var database: RecipesDatabase
     private lateinit var categoryDao: CategoryDao
